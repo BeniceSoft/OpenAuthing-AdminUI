@@ -1,10 +1,10 @@
 import 'umi/typings';
-import { VanillaOidc } from '@axa-fr/react-oidc/dist/vanilla/vanillaOidc'
+import { OidcClient } from '@axa-fr/oidc-client'
 
 declare global {
 
     interface QianKun {
-        getOidc: (configurationName?: string) => VanillaOidc
+        getOidc: (configurationName?: string) => OidcClient
     }
 
     interface Window {

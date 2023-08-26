@@ -1,7 +1,7 @@
 import { getOidc } from "@/lib/utils";
 import { OidcUserStatus, StringMap } from "@axa-fr/react-oidc";
 import { OidcAccessToken, OidcIdToken } from "@axa-fr/react-oidc/dist/ReactOidc";
-import { OidcUserInfo, VanillaOidc } from "@axa-fr/react-oidc/dist/vanilla/vanillaOidc";
+import { OidcUserInfo, OidcClient } from '@axa-fr/oidc-client'
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 
 export type OidcSecureProps = {
@@ -11,7 +11,7 @@ export type OidcSecureProps = {
 };
 
 export const OidcSecure: FC<PropsWithChildren<OidcSecureProps>> = ({ children, callbackPath, extras, configurationName = 'default' }) => {
-    const getOidc = window.__POWERED_BY_QIANKUN__ ? window.qiankun.getOidc : VanillaOidc.get;
+    const getOidc = window.__POWERED_BY_QIANKUN__ ? window.qiankun.getOidc : OidcClient.get;
     const oidc = getOidc(configurationName);
     useEffect(() => {
         if (!oidc.tokens) {
@@ -85,7 +85,7 @@ export const useOidc = (configurationName = 'default') => {
         setIsAuthenticated(defaultIsAuthenticated(getOidc, configurationName));
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const newSubscriptionId = oidc.subscribeEvents((name: string, data: any) => {
-            if (name === VanillaOidc.eventNames.logout_from_another_tab || name === VanillaOidc.eventNames.logout_from_same_tab || name === VanillaOidc.eventNames.token_aquired) {
+            if (name === OidcClient.eventNames.logout_from_another_tab || name === OidcClient.eventNames.logout_from_same_tab || name === OidcClient.eventNames.token_aquired) {
                 if (isMounted) {
                     setIsAuthenticated(defaultIsAuthenticated(getOidc, configurationName));
                 }

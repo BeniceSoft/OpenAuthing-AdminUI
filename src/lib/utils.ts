@@ -1,4 +1,4 @@
-import { VanillaOidc } from "@axa-fr/react-oidc/dist/vanilla/vanillaOidc"
+import { OidcClient } from "@axa-fr/oidc-client"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -13,5 +13,5 @@ export function enabledStatusDescription(enabled: boolean) {
 export const getOidc = (configurationName?: string) => {
     return window.__POWERED_BY_QIANKUN__ ?
         window.qiankun.getOidc(configurationName)
-        : VanillaOidc.get(configurationName)
+        : OidcClient.get(configurationName)
 }

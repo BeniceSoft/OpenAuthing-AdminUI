@@ -1,6 +1,6 @@
-import { OidcConfiguration, OidcProvider } from '@axa-fr/react-oidc';
+import { Fetch, OidcConfiguration, OidcProvider } from '@axa-fr/react-oidc';
 import { CustomHistory } from '@axa-fr/react-oidc/dist/core/routes/withRouter';
-import { VanillaOidc } from '@axa-fr/react-oidc/dist/vanilla/vanillaOidc';
+import { OidcClient, getFetchDefault } from '@axa-fr/oidc-client'
 import OidcRoutes from '@axa-fr/react-oidc/dist/core/routes/OidcRoutes';
 import { ComponentType, FC, PropsWithChildren, useEffect, useState } from 'react';
 import CallBackSuccess from './CallBackSuccess';
@@ -10,7 +10,7 @@ import SessionLost from './SessionLost';
 
 
 export type oidcContext = {
-    (name?: string): VanillaOidc;
+    (name?: string): OidcClient;
 };
 
 const defaultEventState = { name: '', data: null };
@@ -23,13 +23,14 @@ export type OidcProviderProps = {
     loadingComponent?: ComponentType<any>;
     serviceWorkerNotSupportedComponent?: ComponentType<any>;
     configurationName?: string;
-    configuration?: OidcConfiguration;
+    configuration: OidcConfiguration;
     children: any;
     onSessionLost?: () => void;
     onLogoutFromAnotherTab?: () => void;
     onLogoutFromSameTab?: () => void;
     withCustomHistory?: () => CustomHistory;
     onEvent?: (configuration: string, name: string, data: any) => void;
+    getFetch?: () => Fetch;
 };
 
 export type OidcSessionProps = {
@@ -39,7 +40,7 @@ export type OidcSessionProps = {
 
 const OidcSession: FC<PropsWithChildren<OidcSessionProps>> = ({ loadingComponent, children, configurationName }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const getOidc = VanillaOidc.get;
+    const getOidc = OidcClient.get;
     const oidc = getOidc(configurationName);
     useEffect(() => {
         let isMounted = true;
@@ -81,13 +82,14 @@ export const QiankunOidcProvider: FC<PropsWithChildren<OidcProviderProps>> = (pr
     const {
         children,
         configuration,
-        configurationName = 'default'
+        configurationName = 'default',
+        getFetch
     } = props
 
     const getOidc = (configurationName = 'default') => {
         return window.__POWERED_BY_QIANKUN__ ?
             window.qiankun.getOidc(configurationName) :
-            VanillaOidc.getOrCreate(configuration!, configurationName);
+            OidcClient.getOrCreate(getFetch ?? getFetchDefault)(configuration, configurationName);
     };
 
     if (window.__POWERED_BY_QIANKUN__) {

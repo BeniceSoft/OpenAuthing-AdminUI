@@ -10,7 +10,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "@axa-fr/react-oidc": "^6.19.2",
+    "@axa-fr/react-oidc": "^7.3.4",
     "@headlessui/react": "^1.7.13",
     "@headlessui/tailwindcss": "^0.1.2",
     "@heroicons/react": "^2.0.17",
@@ -35,7 +35,6 @@
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.221.0",
     "mockjs": "^1.1.0",
-    "oidc-client": "^1.11.5",
     "qrcode.react": "^3.1.0",
     "react-day-picker": "^8.7.1",
     "react-easy-crop": "^4.7.4",

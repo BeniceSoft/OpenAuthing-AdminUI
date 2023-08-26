@@ -5,7 +5,7 @@ import CallBackSuccess from '@/components/oidc/CallBackSuccess';
 import OidcProvider from '@/components/oidc/OidcProvider';
 import SessionLostCompoent from '@/components/oidc/SessionLost';
 import { OidcConfiguration, TokenRenewMode } from '@axa-fr/react-oidc';
-import { VanillaOidc } from '@axa-fr/react-oidc/dist/vanilla/vanillaOidc';
+import { OidcClient } from '@axa-fr/oidc-client'
 import { Toaster, toast } from 'react-hot-toast';
 import { Outlet } from 'umi';
 
@@ -29,7 +29,7 @@ export default function Layout() {
 
     SHOW_OIDC_LOGGING && console.log(`oidc:${configName}:${eventName}: ${JSON.stringify(data)}`)
 
-    if (eventName === VanillaOidc.eventNames.silentLoginAsync_end) {
+    if (eventName === OidcClient.eventNames.silentLoginAsync_end) {
       toast.success('访问令牌刷新成功')
     }
   }
