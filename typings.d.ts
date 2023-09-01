@@ -14,6 +14,8 @@ declare global {
 
     const SHOW_OIDC_LOGGING: boolean
 
+    const OPEN_SOURCE_URL: string
+
     /**
      * AM Admin API 地址
      */

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { BookOpen, ChevronDown, ChevronUp, Key, LinkIcon, MonitorSmartphone, MoreHorizontalIcon, Network, Palette, Settings, Share2, Shirt } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronUp, GithubIcon, Key, MonitorSmartphone, MoreHorizontalIcon, Network, Palette, Settings, Share2, Shirt } from "lucide-react";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { PowerIcon } from "lucide-react";
@@ -179,9 +179,10 @@ const NavMenu = () => {
                     )}
                     label="组织机构"
                     items={[
-                        { label: '组织管理', href: '/admin/org/departments' },
                         { label: '用户管理', href: '/admin/org/users' },
                         { label: '用户组管理', href: '/admin/org/user-groups' },
+                        { label: '组织管理', href: '/admin/org/departments' },
+                        { label: '岗位管理', href: '/admin/org/posts' },
                     ]} />
             </li>
             <li>
@@ -276,11 +277,11 @@ const LeftSideFooter = () => {
                 <Tooltip>
                     <TooltipTrigger asChild={true}>
                         <Button variant="ghost" className="w-10 h-10" >
-                            <LinkIcon className="w-4 h-5" />
+                            <BookOpen className="w-4 h-5" />
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent className="bg-black/80 text-white">
-                        <span className="text-xs">接口文档</span>
+                        <span className="text-xs">文档</span>
                         <TooltipArrow />
                     </TooltipContent>
                 </Tooltip>
@@ -288,11 +289,11 @@ const LeftSideFooter = () => {
                 <Tooltip>
                     <TooltipTrigger asChild={true}>
                         <Button variant="ghost" className="w-10 h-10" >
-                            <BookOpen className="w-4 h-5" />
+                            <GithubIcon className="w-4 h-5" />
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent className="bg-black/80 text-white">
-                        <span className="text-xs">文档</span>
+                        <span className="text-xs">开源仓库</span>
                         <TooltipArrow />
                     </TooltipContent>
                 </Tooltip>

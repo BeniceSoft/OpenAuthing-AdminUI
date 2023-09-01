@@ -34,6 +34,8 @@ export default defineConfig({
 
                     { path: '/admin/org/departments', component: 'admin/departments' },
 
+                    { path: '/admin/org/posts', component: 'admin/posts' },
+
                     { path: '/admin/org/users', component: 'admin/users' },
                     { path: '/admin/org/users/:id', component: 'admin/users/detail' },
 
@@ -89,4 +91,9 @@ export default defineConfig({
             // enable: false
         },
     },
+    define: {
+        SHOW_OIDC_LOGGING: false,
+
+        OPEN_SOURCE_URL: 'https://github.com/BeniceSoft/OpenAuthing'
+    }
 });
