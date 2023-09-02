@@ -356,13 +356,13 @@ const AdminLayout = () => {
         <div className="h-screen min-w-[1280px] flex bg-background text-gray-800 dark:text-white dark:bg-slate-900">
             <aside className="flex flex-col flex-initial w-[240px] min-w-[240px] h-full overflow-hidden relative bg-slate-50 dark:bg-slate-800 dark:text-white">
                 <Link to="/admin">
-                    <div className="px-2 py-5">
+                    <div className="px-2 py-7">
                         <h1 className="text-center text-xl font-bold tracking-wide text-blue-600 dark:text-gray-100">
                             OpenAuthing
                         </h1>
                     </div>
                 </Link>
-                <div className="h-full p-3 overflow-y-auto">
+                <div className="h-full px-3 overflow-y-auto">
                     <NavMenu />
                 </div>
                 <LeftSideFooter />

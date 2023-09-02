@@ -11,5 +11,6 @@ export default defineConfig({
         AM_USER_PROFILE_URL: 'http://localhost:5129/#/settings/profile',
 
         AM_ADMIN_API_BASE_URL: 'http://localhost:5129'
+        // AM_ADMIN_API_BASE_URL: 'https://mock.apifox.cn/m1/3236434-0-default'
     }
 })

@@ -9,7 +9,7 @@ export default () => {
         setLoading(true)
 
         try {
-            const data = await DataResourceService.get({ pageIndex, pageSize, searchKey })
+            const data = await DataResourceService.query({ pageIndex, pageSize, searchKey })
             setData(data)
         }
         finally {

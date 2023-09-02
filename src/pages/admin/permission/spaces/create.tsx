@@ -1,13 +1,24 @@
 import { Button } from "@/components/ui/button"
 import { Input, InputLabel } from "@/components/ui/input"
+import PermissionSpaceService from "@/services/permission-space.service"
 import { ArrowLeft } from "lucide-react"
 import { useForm } from "react-hook-form"
-import { history } from "umi"
+import { toast } from "react-hot-toast"
+import { history, useRequest } from "umi"
 
 export default () => {
     const { register, handleSubmit, formState: { errors, isValid } } = useForm({ mode: 'all' })
+    const { run, loading } = useRequest((req: any) => PermissionSpaceService.create(req), {
+        manual: true
+    })
 
-    const onValid = (value: any) => { }
+    const onValid = async (value: any) => {
+        const id = await run(value)
+        if (id) {
+            toast.success('创建成功')
+            history.replace(`/admin/permission/spaces/detail/${id}`)
+        }
+    }
 
     return (
         <div className="w-full">
@@ -26,13 +37,13 @@ export default () => {
                     <div className="max-w-2xl flex flex-col gap-y-4">
                         <InputLabel text="空间名称" required>
                             <Input type="text" variant="solid" placeholder="请输入空间名称"
-                                invalid={!!errors.name}
-                                {...register("name", { required: true })} />
+                                invalid={!!errors.displayName}
+                                {...register("displayName", { required: true })} />
                         </InputLabel>
                         <InputLabel text="空间标识" required>
                             <Input type="text" variant="solid" placeholder="请输入空间标识"
-                                invalid={!!errors.code}
-                                {...register("code", { required: true })} />
+                                invalid={!!errors.name}
+                                {...register("name", { required: true })} />
                         </InputLabel>
                         <InputLabel text="空间描述">
                             <textarea rows={4} maxLength={200}
@@ -42,8 +53,8 @@ export default () => {
                         </InputLabel>
 
                         <div className="mt-4 flex gap-x-4">
-                            <Button variant="default" type="submit" disabled={!isValid}>确定</Button>
-                            <Button variant="secondary" type="button">取消</Button>
+                            <Button aria-disabled={loading} variant="default" type="submit" disabled={!isValid}>确定</Button>
+                            <Button aria-disabled={loading} variant="secondary" type="button" onClick={history.back}>取消</Button>
                         </div>
                     </div>
                 </form>
