@@ -1,4 +1,5 @@
-import { useForm } from "react-hook-form"
+import PermissionSpaceSelect from "@/components/PermissionSpaceSelect"
+import { Controller, useForm } from "react-hook-form"
 
 export interface RoleFormProps {
     initValue?: any
@@ -13,7 +14,7 @@ const RoleForm = ({
     disabled = false,
     onSubmit
 }: RoleFormProps) => {
-    const { handleSubmit, register, formState: { errors } } = useForm({ values: initValue })
+    const { handleSubmit, register, formState: { errors },control } = useForm({ values: initValue })
 
     const onValid = async (value: any) => {
         console.log(value)
@@ -24,6 +25,20 @@ const RoleForm = ({
     return (
         <form onSubmit={handleSubmit(onValid)}>
             <div className="grid grid-cols-2 gap-x-20">
+                <label className="flex relative flex-col gap-y-2 text-sm pb-8">
+                    <span className="text-gray-600 after:content-['*'] after:text-red-600">权限空间</span>
+                        <Controller name="data"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <PermissionSpaceSelect {...field}/>
+                            )} />
+                        {errors.permissionSpaceId &&
+                            <span className="absolute bottom-2 left-0 text-xs text-red-500">
+                                请选择权限空间
+                            </span>
+                        }
+                </label>
                 <label className="flex relative flex-col gap-y-2 text-sm pb-8">
                     <span className="text-gray-600 after:content-['*'] after:text-red-600">角色显示名</span>
                     <input type="text"
