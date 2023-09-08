@@ -1,22 +1,23 @@
 import { Button } from "@/components/ui/button"
-import PageHeader from "../../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import { Table } from "@/components/Table"
 import { Link, history, useRequest } from "umi"
 import { SearchIcon } from "lucide-react"
 import PermissionSpaceService from "@/services/permission-space.service"
 import { ChangeEvent, useState } from "react"
+import { Badge } from "@/components/ui/badge"
 
 export default () => {
-    const { loading, data, run: fetch } = useRequest((searchKey?: string, pageIndex?: number, pageSize?: number) => {
-        const params = { searchKey, pageIndex, pageSize }
-        return PermissionSpaceService.getPagedList(params)
+    const { loading, data, run: fetch } = useRequest((searchKey?: string) => {
+        const params = { searchKey }
+        return PermissionSpaceService.getAll(params)
     }, {
         debounceInterval: 500
     })
 
     const onSearchKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
         const searchKey = e.target.value
-        fetch(searchKey, 1)
+        fetch(searchKey)
     }
 
     return (
@@ -36,14 +37,22 @@ export default () => {
                         onChange={onSearchKeyChange} />
                 </div>
                 <Table<any> isLoading={loading}
-                    {...data}
+                    showPagination={false}
+                    items={data}
                     columns={[{
                         title: '空间名称',
                         dataIndex: 'displayName',
                         key: 'displayName',
                         render: (value, record) => (
-                            <Link className="text-primary"
-                                to={`/admin/permission/spaces/detail/${record.id}`}>{value}</Link>
+                            <div className="flex gap-x-1 items-center">
+                                <Link to={`/admin/permission/spaces/detail/${record.id}`}
+                                    className="text-blue-600">
+                                    {value}
+                                </Link>
+                                {record.isSystemBuiltIn &&
+                                    <Badge variant="violet">系统内置</Badge>
+                                }
+                            </div>
                         )
                     }, {
                         title: '空间标识',

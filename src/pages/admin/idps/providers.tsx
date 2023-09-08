@@ -1,5 +1,5 @@
 import { Dispatch, connect, history, useModel } from "umi"
-import PageHeader from "../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import { IdpTemplatesModelState } from "@/models/idpTemplates"
 import { useEffect } from "react"
 import Spin from "@/components/Spin"

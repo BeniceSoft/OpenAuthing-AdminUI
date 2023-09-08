@@ -1,12 +1,11 @@
 import { RoleSubject } from "@/@types/role";
 import Spin from "@/components/Spin";
 import { Table } from "@/components/Table";
-import { Fragment, useEffect } from "react";
+import { useEffect } from "react";
 import { history, useModel, useParams } from "umi";
 import RoleForm from "./components/RoleForm";
 import { CheckCircleIcon, NoSymbolIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import AddRoleSubjectDialog from "./components/AddRoleSubjectDialog";
-import { Menu, Transition } from "@headlessui/react";
 import ConfirmModal from "@/components/Modal/ConfirmModal";
 import dayjs from "dayjs";
 import { Badge } from "@/components/ui/badge";
@@ -130,7 +129,9 @@ export default () => {
                             </div>
                             <main className="w-full flex flex-col gap-y-8">
                                 <div className="mt-4">
-                                    <RoleForm disabled={roleInfo.isSystemBuiltIn || !roleInfo.enabled} initValue={roleInfo} onSubmit={handleSubmit} isBusy={updating} />
+                                    <RoleForm isEdit={true}
+                                        disabled={roleInfo.isSystemBuiltIn || !roleInfo.enabled}
+                                        initValue={roleInfo} onSubmit={handleSubmit} isBusy={updating} />
                                 </div>
                                 <div className="flex flex-col gap-y-2">
                                     <div className="flex items-center">

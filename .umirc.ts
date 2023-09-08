@@ -52,6 +52,8 @@ export default defineConfig({
                     { path: '/admin/permission/roles/detail/:id', component: 'admin/permission/roles/detail' },
 
                     { path: '/admin/permission/general', component: 'admin/permission/general' },
+                    { path: '/admin/permission/general/resources/create', component: 'admin/permission/general/resources/create' },
+                    { path: '/admin/permission/general/resources/detail/:id', component: 'admin/permission/general/resources/detail' },
 
                     { path: '/admin/permission/data', component: 'admin/permission/data' },
                     { path: '/admin/permission/data/auth/create', component: 'admin/permission/data/auth/create' },

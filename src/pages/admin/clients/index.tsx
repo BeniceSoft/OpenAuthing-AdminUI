@@ -1,5 +1,5 @@
 import { Link, connect, history, useDispatch } from "umi"
-import PageHeader from "../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import Empty from "@/components/Empty"
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { ClientsModelState } from "@/models/clients"

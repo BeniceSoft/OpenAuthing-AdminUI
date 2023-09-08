@@ -1,5 +1,5 @@
 import { Table } from "@/components/Table"
-import PageHeader from "../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import { UserGroup } from "@/@types/userGroup"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { Link, history, useModel } from "umi"

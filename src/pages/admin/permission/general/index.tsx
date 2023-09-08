@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
-import PageHeader from "../../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import { Tabs, TabsContent, TabsNav, TabsTrigger } from "@/components/ui/tabs"
+import { history } from "umi"
 
 export default () => {
     return (
@@ -8,7 +9,7 @@ export default () => {
             <PageHeader title="常规资源权限"
                 description="常规资源权限用于管理你的业务系统中以 API 为代表的类型资源，你可以创建资源、定义操作，并将资源与操作授权给角色。"
                 rightRender={() => (
-                    <Button>
+                    <Button onClick={() => history.push('/admin/permission/general/resources/create')}>
                         创建常规资源
                     </Button>
                 )} />

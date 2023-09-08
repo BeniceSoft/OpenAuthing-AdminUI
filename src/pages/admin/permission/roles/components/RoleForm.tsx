@@ -1,10 +1,12 @@
 import PermissionSpaceSelect from "@/components/PermissionSpaceSelect"
+import { Input, InputErrorMessage, InputLabel } from "@/components/ui/input"
 import { Controller, useForm } from "react-hook-form"
 
 export interface RoleFormProps {
     initValue?: any
     isBusy?: boolean
     disabled?: boolean
+    isEdit?: boolean
     onSubmit?: (value: any) => Promise<void>
 }
 
@@ -12,67 +14,60 @@ const RoleForm = ({
     initValue,
     isBusy = false,
     disabled = false,
+    isEdit = false,
     onSubmit
 }: RoleFormProps) => {
-    const { handleSubmit, register, formState: { errors },control } = useForm({ values: initValue })
+    const { handleSubmit, register, formState: { errors }, control } = useForm({ values: initValue })
 
     const onValid = async (value: any) => {
-        console.log(value)
-
         onSubmit && await onSubmit(value)
     }
 
     return (
         <form onSubmit={handleSubmit(onValid)}>
-            <div className="grid grid-cols-2 gap-x-20">
-                <label className="flex relative flex-col gap-y-2 text-sm pb-8">
-                    <span className="text-gray-600 after:content-['*'] after:text-red-600">权限空间</span>
-                        <Controller name="data"
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => (
-                                <PermissionSpaceSelect {...field}/>
-                            )} />
-                        {errors.permissionSpaceId &&
-                            <span className="absolute bottom-2 left-0 text-xs text-red-500">
-                                请选择权限空间
-                            </span>
-                        }
-                </label>
-                <label className="flex relative flex-col gap-y-2 text-sm pb-8">
-                    <span className="text-gray-600 after:content-['*'] after:text-red-600">角色显示名</span>
-                    <input type="text"
+            <div className="grid grid-cols-2 gap-x-20 gap-y-8">
+                <InputLabel text="角色显示名" required>
+                    <Input type="text" variant="solid"
                         disabled={disabled || isBusy}
-                        className="border-none rounded bg-gray-100 dark:bg-gray-700 text-sm transition duration-300 aria-invalid:ring-red-500"
-                        aria-invalid={errors.displayName ? 'true' : 'false'}
+                        invalid={!!errors.displayName}
+                        placeholder="请输入角色显示名"
                         {...register('displayName', { required: true })} />
                     {errors.displayName &&
-                        <span className="absolute bottom-2 left-0 text-xs text-red-500">
-                            请输入「角色显示名」
-                        </span>
+                        <InputErrorMessage message="请输入「角色显示名」" />
                     }
-                </label>
-                <label className="flex relative flex-col gap-y-2 text-sm pb-8">
-                    <span className="text-gray-600 after:content-['*'] after:text-red-600">角色名</span>
-                    <input type="text"
+                </InputLabel>
+                <InputLabel text="角色名" required>
+                    <Input type="text"
+                        variant="solid"
                         disabled={disabled || isBusy}
-                        className="border-none rounded bg-gray-100 dark:bg-gray-700 text-sm transition duration-300 aria-invalid:ring-red-500"
-                        aria-invalid={errors.name ? 'true' : 'false'}
+                        invalid={!!errors.name}
+                        placeholder="请输入角色名"
                         {...register('name', { required: true })} />
                     {errors.name &&
-                        <span className="absolute bottom-2 left-0 text-xs text-red-500">
-                            请输入「角色名」
-                        </span>
+                        <InputErrorMessage message="请输入「角色名」" />
                     }
-                </label>
-                <label className="flex relative flex-col gap-y-2 text-sm">
-                    <span className="text-gray-600">描述</span>
-                    <textarea rows={4} maxLength={200}
+                </InputLabel>
+                <InputLabel text="权限空间" required>
+                    <Controller name="permissionSpaceId"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <PermissionSpaceSelect disabled={disabled || isBusy || isEdit}
+                                invalid={!!errors.permissionSpaceId}
+                                {...field} />
+                        )} />
+                    {errors.permissionSpaceId &&
+                        <InputErrorMessage message="请选择权限空间" />
+                    }
+                </InputLabel>
+                <InputLabel text="描述">
+                    <textarea rows={1} maxLength={200}
                         disabled={disabled || isBusy}
-                        className="border-none rounded bg-gray-100 dark:bg-gray-700 text-sm transition duration-300 aria-invalid:ring-red-500"
+                        className="border-gray-200 rounded bg-gray-100 w-full max-h-40 min-h-[38px] dark:bg-gray-700 text-sm transition duration-300 aria-invalid:ring-red-500 disabled:cursor-not-allowed focus:bg-white"
                         aria-invalid={errors.description ? 'true' : 'false'}
+                        placeholder="请输入描述"
                         {...register('description')} />
-                </label>
+                </InputLabel>
             </div>
             <div className="mt-6">
                 <button type="submit"

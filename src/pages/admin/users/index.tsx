@@ -1,4 +1,4 @@
-import PageHeader from "../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import { UserInfo } from "@/@types/user"
 import { Table, TableRef } from "@/components/Table"
 import { Dispatch, connect, history } from "umi"

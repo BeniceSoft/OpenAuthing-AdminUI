@@ -42,7 +42,6 @@ const ListData = React.forwardRef<{}, ListDataProps>((props, _) => {
     }
 
     const onUpdateItem = (e: any, index: number) => {
-        console.log('update ', index, items)
         const value = e.target.value;
         const newItems = items.map((x, i) => {
             if (i === index) return value

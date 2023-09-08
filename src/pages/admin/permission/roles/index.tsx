@@ -1,18 +1,11 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
-import PageHeader from "../../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import { RoleInfo } from "@/@types/role"
 import { Table } from "@/components/Table"
 import { Dispatch, Link, connect, history } from "umi"
 import React, { useEffect } from "react"
 import { RolesModelState } from "@/models/roles"
-import {
-    Tooltip,
-    TooltipArrow,
-    TooltipContent,
-    TooltipPortal,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger, } from "@/components/ui/tooltip"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from '@/components/ui/button'
 import { CheckCircle, CircleSlash, MoreHorizontalIcon, Trash2 } from "lucide-react"

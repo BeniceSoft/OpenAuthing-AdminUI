@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsNav, TabsTrigger } from "@/components/ui/tabs"
-import PageHeader from "../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import { Suspense } from "react"
 import Spin from "@/components/Spin"
 import React from "react"

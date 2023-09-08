@@ -5,8 +5,9 @@ import { Badge } from "@/components/ui/badge"
 import { Input, InputLabel } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Controller, useForm } from "react-hook-form"
-import { X } from "lucide-react"
+import { ArrowLeftIcon, X } from "lucide-react"
 import { confirm } from "@/components/Modal/ConfirmModal"
+import PermissionSpaceSelect from "@/components/PermissionSpaceSelect"
 
 const ListData = lazy(() => import("./components/list-data"))
 const TreeData = lazy(() => import("./components/tree-data"))
@@ -48,7 +49,7 @@ export default () => {
             onOK: () => history.back(),
             okButton: {
                 text: '确定离开',
-                className: 'bg-transparent text-secondary-foreground'
+                className: 'bg-secondary text-secondary-foreground'
             },
             closeButton: {
                 text: '继续配置',
@@ -83,9 +84,7 @@ export default () => {
             <div className="mb-2">
                 <span onClick={onCancel}
                     className="cursor-pointer inline-flex items-center text-sm gap-x-1 text-gray-400 hover:text-blue-600 transition-colors duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
-                    </svg>
+                    <ArrowLeftIcon className="w-4 h-4" />
                     返回
                 </span>
             </div>
@@ -105,6 +104,14 @@ export default () => {
                         <Input type="text" placeholder="请输入资源标识，填写一个名称，例如：order" variant="solid"
                             invalid={!!errors.code}
                             {...register("code", { required: true })} />
+                    </InputLabel>
+                    <InputLabel text="权限空间" required>
+                        <Controller name="permissionSpaceId"
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <PermissionSpaceSelect {...field} />
+                            )} />
                     </InputLabel>
                     <InputLabel text="资源描述" >
                         <Input type="text" placeholder="请输入资源描述" variant="solid"

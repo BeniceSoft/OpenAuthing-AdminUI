@@ -1,4 +1,4 @@
-import PageHeader from "../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import Tree from "@/components/Tree"
 import { useEffect, useRef, useState } from "react"
 import TreeNode from "@/@types/TreeNode"

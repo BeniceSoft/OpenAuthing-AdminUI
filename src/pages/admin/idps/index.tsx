@@ -1,5 +1,5 @@
 import { Dispatch, Link, connect, history } from "umi"
-import PageHeader from "../components/PageHeader"
+import PageHeader from "@/components/PageHeader"
 import React, { useEffect } from "react"
 import { IdPsModelState } from "@/models/idps"
 import { ExternalIdentityProvider } from "@/@types/identityProvider"
