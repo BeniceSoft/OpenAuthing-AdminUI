@@ -61,7 +61,7 @@ export const request: RequestConfig = {
                 headers['Authorization'] = `Bearer ${oidc.tokens.accessToken}`
             }
 
-            let baseURL: string | null = AM_ADMIN_API_BASE_URL
+            let baseURL: string | null = ADMIN_API_BASE_URL
             // if (process.env.NODE_ENV === 'development') {
             //     baseURL = null
             // }

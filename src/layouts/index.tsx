@@ -10,8 +10,8 @@ import { Toaster, toast } from 'react-hot-toast';
 import { Outlet } from 'umi';
 
 const configuration: OidcConfiguration = {
-  authority: AM_ODIC_AUTHORITY,
-  client_id: AM_ODIC_CLIENT_ID,
+  authority: ODIC_AUTHORITY,
+  client_id: ODIC_CLIENT_ID,
   redirect_uri: window.location.origin + '/am/admin/login',
   silent_redirect_uri: window.location.origin + '/am/admin/silent-login',
   // silent_redirect_uri: window.location.origin + '/authentication/silent-callback', // Optional activate silent-signin that use cookies between OIDC server and client javascript to restore the session

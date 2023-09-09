@@ -1,4 +1,4 @@
-# LinkMore AM AdminUI
+# OpenAuthing AdminUI
 
 ## 开发者
 1. Install

@@ -10,7 +10,7 @@ class AuthService {
     }
 
     public async getExternalIdPs() {
-        const { data } = await request('/api/account/getexternalloginproviders')
+        const { data } = await request('/api/getexternalloginproviders')
         return data ?? []
     }
 

@@ -1,9 +1,11 @@
 import { request } from "@/lib/request"
 
+const ROOT_URL = "/api/users"
+
 const UserService = {
 
     getAll: async (params: { searchKey?: string, pageIndex?: number, pageSize?: number, excludeDepartmentId?: string, onlyEnabled?: boolean }) => {
-        const { data } = await request('/api/admin/users', {
+        const { data } = await request(ROOT_URL, {
             method: 'GET',
             params
         })
@@ -11,14 +13,14 @@ const UserService = {
     },
 
     get: async (id: string) => {
-        const { data } = await request(`/api/admin/users/${id}`, {
+        const { data } = await request(`${ROOT_URL}/${id}`, {
             method: 'GET'
         })
         return data
     },
 
     create: async (input: any) => {
-        const { data } = await request('/api/admin/users', {
+        const { data } = await request(ROOT_URL, {
             method: 'POST',
             data: {
                 ...input
@@ -29,7 +31,7 @@ const UserService = {
     },
 
     delete: async (id: string) => {
-        const { data } = await request(`/api/admin/users/${id}`, {
+        const { data } = await request(`${ROOT_URL}/${id}`, {
             method: 'DELETE'
         })
         return data === true
@@ -38,7 +40,7 @@ const UserService = {
     uploadAvatar: async (id: string, avatarBlob: Blob) => {
         const formData = new FormData()
         formData.append('file', avatarBlob)
-        const { data } = await request(`/api/admin/users/${id}/avatar`, {
+        const { data } = await request(`${ROOT_URL}/${id}/avatar`, {
             method: 'put',
             data: formData,
             headers: {
@@ -50,7 +52,7 @@ const UserService = {
     },
 
     getUserDepartments: async (id: string) => {
-        const { data } = await request(`/api/admin/users/${id}/departments`, {
+        const { data } = await request(`${ROOT_URL}/${id}/departments`, {
             method: 'GET'
         })
         return data

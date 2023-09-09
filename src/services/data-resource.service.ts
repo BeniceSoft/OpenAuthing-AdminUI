@@ -1,8 +1,10 @@
 import { request } from "@/lib/request"
 
+const ROOT_URL = '/api/dataresources'
+
 const DataResourceService = {
     query: async (params: { searchKey?: string, pageIndex?: number, pageSize?: number }) => {
-        const { data } = await request('/api/admin/dataresources', {
+        const { data } = await request(ROOT_URL, {
             method: 'GET',
             params
         })

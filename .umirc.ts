@@ -35,6 +35,7 @@ export default defineConfig({
                     { path: '/admin/org/departments', component: 'admin/departments' },
 
                     { path: '/admin/org/posts', component: 'admin/posts' },
+                    { path: '/admin/org/posts/create', component: 'admin/posts/create' },
 
                     { path: '/admin/org/users', component: 'admin/users' },
                     { path: '/admin/org/users/:id', component: 'admin/users/detail' },

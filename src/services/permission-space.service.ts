@@ -1,6 +1,6 @@
 import { request } from "@/lib/request"
 
-const ROOT_URL = "/api/admin/permissionspaces";
+const ROOT_URL = "/api/permissionspaces";
 
 const PermissionSpaceService = {
     getAll: (params: any) => {

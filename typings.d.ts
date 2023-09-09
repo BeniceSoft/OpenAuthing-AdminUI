@@ -17,16 +17,16 @@ declare global {
     const OPEN_SOURCE_URL: string
 
     /**
-     * AM Admin API 地址
+     * Admin API 地址
      */
-    const AM_ADMIN_API_BASE_URL: string
+    const ADMIN_API_BASE_URL: string
 
-    const AM_ODIC_AUTHORITY: string
-    const AM_ODIC_CLIENT_ID: string
-    const AM_ODIC_CLIENT_SECRET: string
+    const ODIC_AUTHORITY: string
+    const ODIC_CLIENT_ID: string
+    const ODIC_CLIENT_SECRET: string
 
     /**
      * 用户信息页面 url
      */
-    const AM_USER_PROFILE_URL: string
+    const USER_PROFILE_URL: string
 }

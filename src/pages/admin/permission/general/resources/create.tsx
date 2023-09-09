@@ -1,7 +1,7 @@
 import { confirm } from "@/components/Modal/ConfirmModal"
 import PermissionSpaceSelect from "@/components/PermissionSpaceSelect"
 import { Button } from "@/components/ui/button"
-import { Input, InputLabel } from "@/components/ui/input"
+import { Input, InputErrorMessage, InputLabel } from "@/components/ui/input"
 import { ArrowLeftIcon } from "lucide-react"
 import { Controller, useForm } from "react-hook-form"
 import { history, useRequest } from 'umi'
@@ -10,7 +10,7 @@ import GeneralResourceService from "@/services/general-resource.service"
 import toast from "react-hot-toast"
 
 export default () => {
-    const { register, handleSubmit, control } = useForm()
+    const { register, handleSubmit, control, formState: { errors } } = useForm()
     const { loading, run } = useRequest((data: any) => GeneralResourceService.create(data), { manual: true })
 
     const onCancel = () => {
@@ -55,25 +55,40 @@ export default () => {
                     <InputLabel text="资源名称" required>
                         <Input type="text" variant="solid"
                             placeholder="请输入资源名称"
+                            invalid={!!errors.name}
                             {...register("name", { required: true })} />
+                        {errors.name &&
+                            <InputErrorMessage message="请输入资源名称" />
+                        }
                     </InputLabel>
                     <InputLabel text="资源标识" required>
                         <Input type="text" variant="solid"
                             placeholder="请输入资源标识"
+                            invalid={!!errors.code}
                             {...register("code", { required: true })} />
+                        {errors.code &&
+                            <InputErrorMessage message="请输入资源标识" />
+                        }
                     </InputLabel>
                     <InputLabel text="权限空间" required>
                         <Controller name="premissionSpaceId"
                             control={control}
                             rules={{ required: true }}
                             render={({ field }) => (
-                                <PermissionSpaceSelect {...field} />
+                                <PermissionSpaceSelect invalid={!!errors.premissionSpaceId} {...field} />
                             )} />
+                        {errors.premissionSpaceId &&
+                            <InputErrorMessage message="请选择权限空间" />
+                        }
                     </InputLabel>
                     <InputLabel text="资源路径" required>
                         <Input type="text" variant="solid"
                             placeholder="请输入用于标识访问资源的路径，例如：/api/v1/users"
+                            invalid={!!errors.path}
                             {...register("path", { required: true })} />
+                        {errors.path &&
+                            <InputErrorMessage message="请输入资源路径" />
+                        }
                     </InputLabel>
                     <InputLabel text="资源描述">
                         <textarea rows={3}

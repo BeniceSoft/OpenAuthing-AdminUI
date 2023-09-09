@@ -258,7 +258,7 @@ const LeftSideFooter = () => {
                 <Tooltip>
                     <TooltipTrigger asChild={true}>
                         <Button variant="ghost" className="w-10 h-10"
-                            onClick={() => window.open(AM_USER_PROFILE_URL, '_blank')}>
+                            onClick={() => window.open(USER_PROFILE_URL, '_blank')}>
                             <Avatar className="w-8 h-8">
                                 <AvatarImage src={oidcUser?.picture}
                                     alt="avatar" />

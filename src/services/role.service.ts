@@ -1,21 +1,23 @@
 import { RoleSubjectType } from "@/@types/role";
 import { request } from "@/lib/request"
 
+const ROOT_URL = "/api/roles"
+
 const RoleService = {
     getAll: async (params: { pageIndex: number, pageSize: number }) => {
-        const { data } = await request('/api/admin/roles', {
+        const { data } = await request(ROOT_URL, {
             params
         })
         return data;
     },
 
     get: async (id: string) => {
-        const { data } = await request(`/api/admin/roles/${id}`)
+        const { data } = await request(`${ROOT_URL}/${id}`)
         return data;
     },
 
     create: async (input: any) => {
-        const { data } = await request(`/api/admin/roles`, {
+        const { data } = await request(ROOT_URL, {
             method: 'POST',
             data: input
         })
@@ -23,7 +25,7 @@ const RoleService = {
     },
 
     update: async (id: string, input: any) => {
-        const { data } = await request(`/api/admin/roles/${id}`, {
+        const { data } = await request(`${ROOT_URL}/${id}`, {
             method: 'PUT',
             data: input
         })
@@ -31,14 +33,14 @@ const RoleService = {
     },
 
     delete: async (id: string) => {
-        const { data } = await request(`/api/admin/roles/${id}`, {
+        const { data } = await request(`${ROOT_URL}/${id}`, {
             method: 'DELETE'
         })
         return data;
     },
 
     toggleEnabled: async (id: string, enabled: boolean) => {
-        const { data } = await request(`/api/admin/roles/${id}/toggle-enabled`, {
+        const { data } = await request(`${ROOT_URL}/${id}/toggle-enabled`, {
             method: 'PUT',
             params: {
                 enabled
@@ -48,12 +50,12 @@ const RoleService = {
     },
 
     getRoleSubjects: async (id: string) => {
-        const { data } = await request(`/api/admin/roles/${id}/subjects`)
+        const { data } = await request(`${ROOT_URL}/${id}/subjects`)
         return data;
     },
 
     saveRoleSubjects: async (id: string, items: Array<{ type: RoleSubjectType, id: string }>) => {
-        const { data } = await request(`/api/admin/roles/${id}/subjects`, {
+        const { data } = await request(`${ROOT_URL}/${id}/subjects`, {
             method: 'PUT',
             data: {
                 subjects: items

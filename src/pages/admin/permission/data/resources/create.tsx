@@ -2,7 +2,7 @@ import { useSearchParams, history } from "umi"
 import { DataTypes } from ".."
 import { Suspense, lazy, useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Input, InputLabel } from "@/components/ui/input"
+import { Input, InputErrorMessage, InputLabel } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Controller, useForm } from "react-hook-form"
 import { ArrowLeftIcon, X } from "lucide-react"
@@ -99,19 +99,28 @@ export default () => {
                         <Input type="text" placeholder="请输入资源名称" variant="solid"
                             invalid={!!errors.name}
                             {...register("name", { required: true })} />
+                        {errors.name &&
+                            <InputErrorMessage message="请输入资源名称" />
+                        }
                     </InputLabel>
                     <InputLabel text="资源标识" required>
                         <Input type="text" placeholder="请输入资源标识，填写一个名称，例如：order" variant="solid"
                             invalid={!!errors.code}
                             {...register("code", { required: true })} />
+                        {errors.code &&
+                            <InputErrorMessage message="请输入资源标识" />
+                        }
                     </InputLabel>
                     <InputLabel text="权限空间" required>
                         <Controller name="permissionSpaceId"
                             control={control}
                             rules={{ required: true }}
                             render={({ field }) => (
-                                <PermissionSpaceSelect {...field} />
+                                <PermissionSpaceSelect invalid={!!errors.permissionSpaceId} {...field} />
                             )} />
+                        {errors.permissionSpaceId &&
+                            <InputErrorMessage message="请选择权限空间" />
+                        }
                     </InputLabel>
                     <InputLabel text="资源描述" >
                         <Input type="text" placeholder="请输入资源描述" variant="solid"

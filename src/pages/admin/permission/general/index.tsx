@@ -2,6 +2,10 @@ import { Button } from "@/components/ui/button"
 import PageHeader from "@/components/PageHeader"
 import { Tabs, TabsContent, TabsNav, TabsTrigger } from "@/components/ui/tabs"
 import { history } from "umi"
+import { Suspense, lazy } from "react"
+import Spin from "@/components/Spin"
+
+const ResourceManagement = lazy(() => import("./resources/management"))
 
 export default () => {
     return (
@@ -14,22 +18,20 @@ export default () => {
                     </Button>
                 )} />
 
-            <main>
-                <Tabs defaultValue="index">
-                    <TabsNav className="border-b">
-                        <TabsTrigger value="index">常规资源</TabsTrigger>
-                        <TabsTrigger value="auth">授权管理</TabsTrigger>
-                    </TabsNav>
-                    <div>
-                        <TabsContent value="index">
-                            index
-                        </TabsContent>
-                        <TabsContent value="auth">
-                            auth
-                        </TabsContent>
-                    </div>
-                </Tabs>
-            </main>
+            <Tabs className="flex-1 flex flex-col overflow-hidden gap-y-4" defaultValue="management">
+                <TabsNav className="border-b">
+                    <TabsTrigger value="management">常规资源</TabsTrigger>
+                    <TabsTrigger value="auth">授权管理</TabsTrigger>
+                </TabsNav>
+                <Suspense fallback={<Spin spinning={true} />}>
+                    <TabsContent asChild value="management">
+                        <ResourceManagement />
+                    </TabsContent>
+                    <TabsContent asChild value="auth">
+                        auth
+                    </TabsContent>
+                </Suspense>
+            </Tabs>
         </div>
     )
 }
