@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, MoreHorizontalIcon, User, UserMinusIcon, Users } from "lucide-react";
+import { ArrowLeftIcon, ChevronDown, MoreHorizontalIcon, User, UserMinusIcon, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default () => {
@@ -74,9 +74,7 @@ export default () => {
                     <div className="mb-2">
                         <span onClick={history.back}
                             className="cursor-pointer inline-flex items-center text-sm gap-x-1 text-gray-400 hover:text-blue-600 transition-colors duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
-                            </svg>
+                            <ArrowLeftIcon className="w-4 h-4" />
                             返回
                         </span>
                     </div>

@@ -1,7 +1,5 @@
-import { useOidc } from "@axa-fr/react-oidc"
 
 export default () => {
-    const { login } = useOidc()
 
     return (
         <div className="w-screen h-screen flex items-center">

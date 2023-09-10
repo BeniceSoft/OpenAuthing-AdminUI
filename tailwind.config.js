@@ -48,6 +48,10 @@ module.exports = {
                     DEFAULT: "hsl(var(--card))",
                     foreground: "hsl(var(--card-foreground))",
                 },
+                input: {
+                    DEFAULT: 'hsl(var(--input))',
+                    foreground: 'hsl(var(--input-foreground))',
+                }
             }
         },
     },

@@ -47,7 +47,7 @@ function Table<TRecord extends {}>({
         resetPagination() {
             setPageIndex(1)
         }
-    }))
+    }), [])
 
     const handlePageChange = async (pageIndex: number, pageSize?: number) => {
         setPageIndex(pageIndex)

@@ -15,7 +15,7 @@ const configuration: OidcConfiguration = {
   redirect_uri: window.location.origin + '/am/admin/login',
   silent_redirect_uri: window.location.origin + '/am/admin/silent-login',
   // silent_redirect_uri: window.location.origin + '/authentication/silent-callback', // Optional activate silent-signin that use cookies between OIDC server and client javascript to restore the session
-  scope: 'openid profile phone roles',
+  scope: 'openid profile phone roles offline_access',
   // service_worker_relative_url: '/OidcServiceWorker.js',
   service_worker_only: false,
   service_worker_convert_all_requests_to_cors: true,
@@ -29,7 +29,8 @@ export default function Layout() {
 
     SHOW_OIDC_LOGGING && console.log(`oidc:${configName}:${eventName}: ${JSON.stringify(data)}`)
 
-    if (eventName === OidcClient.eventNames.silentLoginAsync_end) {
+    if (eventName === OidcClient.eventNames.refreshTokensAsync_end &&
+      data.success) {
       toast.success('访问令牌刷新成功')
     }
   }

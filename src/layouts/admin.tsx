@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { BookOpen, ChevronDown, ChevronUp, GithubIcon, Key, MonitorSmartphone, MoreHorizontalIcon, Network, Palette, Settings, Share2, Shirt } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronUp, GithubIcon, Key, MonitorSmartphone, MoreHorizontalIcon, Network, Palette, Settings, Share2, ShieldCheckIcon, Shirt } from "lucide-react";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { PowerIcon } from "lucide-react";
@@ -179,9 +179,9 @@ const NavMenu = () => {
                     )}
                     label="组织机构"
                     items={[
+                        { label: '组织管理', href: '/admin/org/departments' },
                         { label: '用户管理', href: '/admin/org/users' },
                         { label: '用户组管理', href: '/admin/org/user-groups' },
-                        { label: '组织管理', href: '/admin/org/departments' },
                         { label: '岗位管理', href: '/admin/org/posts' },
                     ]} />
             </li>
@@ -197,6 +197,19 @@ const NavMenu = () => {
                         { label: '角色管理', href: '/admin/permission/roles' },
                         { label: '常规资源权限', href: '/admin/permission/general' },
                         { label: '数据资源权限', href: '/admin/permission/data' }
+                    ]} />
+            </li>
+            <li>
+                <NestedNavMenu
+                    selected={pathname.startsWith('/admin/permission')}
+                    icon={(
+                        <ShieldCheckIcon className="w-5 h-5 stroke-gray-600 group-aria-selected:stroke-blue-600 group-hover:stroke-blue-600" />
+                    )}
+                    label="安全设置"
+                    items={[
+                        { label: '通用安全', href: '/admin/security/basic' },
+                        { label: '密码安全', href: '/admin/security/password' },
+                        { label: '多因素认证', href: '/admin/security/mfa' },
                     ]} />
             </li>
             <li>
@@ -288,7 +301,8 @@ const LeftSideFooter = () => {
 
                 <Tooltip>
                     <TooltipTrigger asChild={true}>
-                        <Button variant="ghost" className="w-10 h-10" >
+                        <Button variant="ghost" className="w-10 h-10"
+                            onClick={() => window.open(OPEN_SOURCE_URL, '_blank')}>
                             <GithubIcon className="w-4 h-5" />
                         </Button>
                     </TooltipTrigger>

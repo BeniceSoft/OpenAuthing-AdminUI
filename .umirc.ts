@@ -33,6 +33,7 @@ export default defineConfig({
                     { path: '/admin/setting', component: 'admin/setting' },
 
                     { path: '/admin/org/departments', component: 'admin/departments' },
+                    { path: '/admin/org/departments/importexcel', component: 'admin/departments/importexcel' },
 
                     { path: '/admin/org/posts', component: 'admin/posts' },
                     { path: '/admin/org/posts/create', component: 'admin/posts/create' },
@@ -60,6 +61,8 @@ export default defineConfig({
                     { path: '/admin/permission/data/auth/create', component: 'admin/permission/data/auth/create' },
                     { path: '/admin/permission/data/resources/create', component: 'admin/permission/data/resources/create' },
                     { path: '/admin/permission/data/resources/detail/:id', component: 'admin/permission/data/resources/detail' },
+
+                    { path: '/admin/security/mfa', component: 'admin/security/mfa' },
 
                     { path: '/admin', redirect: '/admin/dashboard' }
                 ]

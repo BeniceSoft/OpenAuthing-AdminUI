@@ -70,14 +70,6 @@ const OidcSession: FC<PropsWithChildren<OidcSessionProps>> = ({ loadingComponent
     );
 };
 
-const Switch = ({ isLoading, loadingComponent, children, configurationName }: any) => {
-    const LoadingComponent = loadingComponent;
-    if (isLoading) {
-        return <LoadingComponent configurationName={configurationName}>{children}</LoadingComponent>;
-    }
-    return <>{children}</>;
-};
-
 export const QiankunOidcProvider: FC<PropsWithChildren<OidcProviderProps>> = (props) => {
     const {
         children,

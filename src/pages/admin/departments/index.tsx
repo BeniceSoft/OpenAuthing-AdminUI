@@ -2,20 +2,21 @@ import PageHeader from "@/components/PageHeader"
 import Tree from "@/components/Tree"
 import { useEffect, useRef, useState } from "react"
 import TreeNode from "@/@types/TreeNode"
-import { Dispatch, connect } from "umi"
+import { Dispatch, connect, history } from "umi"
 import { DepartmentsModelState } from "@/models/departments"
-import InputOrgDialog from "./components/InputOrgDialog"
+import DepartmentDialog, { DepartmentDialogRef } from "./components/DepartmentDialog"
 import classNames from "classnames"
 import DepartmentService from "@/services/department.service"
 import Message from "@/components/Message"
 import { confirm } from '@/components/Modal'
 import AddMemberDialog from "./components/AddMemberDialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Plus, Search, XCircle } from "lucide-react"
+import { ChevronDownIcon, MoreHorizontal, Plus, Search, XCircle } from "lucide-react"
 import { DepartmentMember } from "@/@types/department"
 import DepartmentMemberTable from "./components/DepartmentMemberTable"
 import { Button } from "@/components/ui/button"
 import DepartmentAndUserList from "./components/DepartmentAndUserList"
+import { TableRef } from "@/components/Table"
 
 interface OrgManagementPageProps {
     isLoadingRootDepartment?: boolean
@@ -36,11 +37,11 @@ const OrgManagementPage = ({
     const [selectedNode, setSelectedNode] = useState<TreeNode>()
     const [expandedKeys, setExpendedKeys] = useState(new Set<string>())
     const [messageQueue, setMessageQueue] = useState<Array<{ node: TreeNode, type: 'expand' | 'collapse' }>>([]);
-    const [inputOrgDialogState, setInputOrgDialogState] = useState<{ opened: boolean, departmentId?: string }>()
     const [isOrgProcessing, setOrgProcessing] = useState(false)
     const [addMemberDialogOpened, setAddMemberDialogOpened] = useState<boolean>()
 
-    const tableRef = useRef<any>()
+    const tableRef = useRef<TableRef>(null)
+    const departmentDialogRef = useRef<DepartmentDialogRef>(null)
 
     const { totalCount, items: departmentUsers = [] } = departmentMembers ?? {}
 
@@ -114,12 +115,21 @@ const OrgManagementPage = ({
 
     // 打开新建/编辑组织弹窗
     const openOrgDialog = (departmentId?: string) => {
-        setInputOrgDialogState({ opened: true, departmentId })
+        let action: any = 'create'
+        let data = undefined
+        if (departmentId) {
+            action = 'update'
+            data = {
+                id: departmentId
+            }
+        }
+
+        departmentDialogRef.current?.open(action, data)
     }
 
     // 关闭新建/编辑组织弹窗
     const closeOrgDialog = () => {
-        setInputOrgDialogState({ opened: false, departmentId: undefined })
+        departmentDialogRef.current?.close()
     }
 
     // 处理创建/修改组织
@@ -183,7 +193,7 @@ const OrgManagementPage = ({
         const typeName = isOrg ? '组织' : '部门'
 
         return (
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild={true}>
                     <button className={classNames(
                         "group w-6 h-6 rounded transition-colors flex items-center justify-center",
@@ -218,12 +228,18 @@ const OrgManagementPage = ({
                         <Button variant="secondary">
                             成员入职
                         </Button>
-                        <DropdownMenu>
+                        <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild={true}>
-                                <Button variant="secondary">
+                                <Button variant="secondary" className="gap-x-1">
                                     组织成员导入
+                                    <ChevronDownIcon className="w-4 h-4" />
                                 </Button>
                             </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-32 text-gray-500">
+                                <DropdownMenuItem onClick={() => history.push("/admin/org/departments/importexcel")}>
+                                    Excel 导入
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
                 )} />
@@ -243,7 +259,7 @@ const OrgManagementPage = ({
                                 }
                             </div>
                             <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger  asChild={true}>
+                                <DropdownMenuTrigger asChild={true}>
                                     <button className="px-1 gap-x-0 flex items-center justify-center w-full h-full bg-gray-100 text-gray-600 rounded text-sm hover:bg-gray-200 focus-visible:outline-none transition-colors">
                                         <Plus className="w-4 h-4" />
                                         <span>新建</span>
@@ -251,7 +267,7 @@ const OrgManagementPage = ({
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="p-2 text-sm text-gray-600">
                                     <DropdownMenuGroup>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => openOrgDialog()}>
                                             <span>添加部门</span>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => openOrgDialog()}>
@@ -262,7 +278,8 @@ const OrgManagementPage = ({
                             </DropdownMenu>
                         </div>
                         {searchKey === '' ?
-                            <Tree className="flex-1 w-full overflow-y-auto pr-5" isLoading={isLoadingRootDepartment}
+                            <Tree className="flex-1 w-full overflow-y-auto pr-5"
+                                isLoading={isLoadingRootDepartment}
                                 selectedKey={selectedNode?.key} expandedKeys={expandedKeys}
                                 onSelect={onSelect} onLoadData={onLoadData} onExpand={onExpand}
                                 treeData={departmentTree}
@@ -283,9 +300,7 @@ const OrgManagementPage = ({
                     </div>
                 </div>
             </div>
-            <InputOrgDialog isOpen={inputOrgDialogState?.opened ?? false} onClose={closeOrgDialog}
-                currentId={inputOrgDialogState?.departmentId} isProcessing={isOrgProcessing}
-                onConfirm={handleCreateOrUpdateOrg} />
+            <DepartmentDialog ref={departmentDialogRef} isProcessing={isOrgProcessing} onConfirm={handleCreateOrUpdateOrg} />
             <AddMemberDialog open={addMemberDialogOpened} onOpenChange={setAddMemberDialogOpened}
                 department={{ ...selectedNode }}
                 onAdd={handleAddMembers} />

@@ -1,14 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input, InputLabel } from "@/components/ui/input";
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { useForm } from "react-hook-form"
 
-interface InputOrgDialogProps {
-    isOpen: boolean,
+interface DepartmentDialogRefProps {
     isProcessing?: boolean,
-    currentId?: string
-    onClose?: () => void,
     onConfirm?: (actionType: 'create' | 'update', value: any) => Promise<boolean>;
 }
 
@@ -17,49 +14,41 @@ const ACTION_TEXTS = {
     'create': { title: '新建', btn: '确认' },
 }
 
-const InputOrgDialog = ({
-    isOpen,
+export type DepartmentDialogRef = {
+    open: (action: 'update' | 'create', data?: any) => void,
+    close: () => void
+}
+
+const DepartmentDialog = forwardRef<DepartmentDialogRef, DepartmentDialogRefProps>(({
     isProcessing,
-    currentId,
-    onClose,
     onConfirm
-}: InputOrgDialogProps) => {
+}, ref) => {
+    const [isOpen, setOpen] = useState(false)
     const [actionType, setActionType] = useState<'create' | 'update'>('create')
+    const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    useImperativeHandle(ref, () => ({
+        open: (action: 'update' | 'create', data?: any) => {
+            if (isOpen) return
 
-    })
-
-    useEffect(() => {
-        if (!isOpen) return
-        const type = typeof currentId === 'undefined' ? 'create' : 'update'
-        setActionType(type)
-    }, [isOpen])
-
-    useEffect(() => {
-
-    }, [])
-
-    const restValues = () => {
-        reset()
-    }
+            setActionType(action)
+            reset(data)
+            setOpen(true)
+        },
+        close: () => {
+            reset()
+            setOpen(false)
+        }
+    }), [])
 
     const onSubmit = async (value: any) => {
         if (onConfirm && await onConfirm(actionType, value)) {
-            restValues()
+            reset()
         }
-    }
-
-    const handleOpenChange = (open: boolean) => {
-        if (!open) {
-            onClose && onClose()
-        }
-
-        restValues()
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <Dialog open={isOpen} onOpenChange={setOpen}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
@@ -67,7 +56,7 @@ const InputOrgDialog = ({
                     </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <input value={currentId} type="hidden" {...register('id')} />
+                    <input type="hidden" {...register('id')} />
                     <div>
                         <div className="flex flex-col gap-y-8 w-full">
                             <InputLabel text="组织名称" required>
@@ -94,12 +83,13 @@ const InputOrgDialog = ({
                         </div>
                     </div>
                     <DialogFooter className="pt-8">
-                        <Button variant="secondary"
-                            onClick={() => handleOpenChange(false)}
-                            disabled={isProcessing}
-                        >
-                            取消
-                        </Button>
+                        <DialogClose asChild={true}>
+                            <Button variant="secondary"
+                                disabled={isProcessing}>
+                                取消
+                            </Button>
+                        </DialogClose>
+
                         <Button type="submit"
                             disabled={isProcessing}>
                             {ACTION_TEXTS[actionType].btn}
@@ -107,9 +97,9 @@ const InputOrgDialog = ({
                     </DialogFooter>
                 </form>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     )
-}
+})
 
 
-export default InputOrgDialog
+export default DepartmentDialog
