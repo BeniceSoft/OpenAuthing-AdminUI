@@ -2,7 +2,7 @@ import mockjs from "mockjs";
 import { defineMock } from "umi";
 
 export default defineMock({
-    'GET /api/admin/applications': (req, res) => {
+    'GET /api/applications': (req, res) => {
         setTimeout(() => {
             res.status(200).json(mockjs.mock({
                 code: 200,
@@ -15,7 +15,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'POST /api/admin/applications': (req, res) => {
+    'POST /api/applications': (req, res) => {
         setTimeout(() => {
             res.status(200).json(mockjs.mock({
                 code: 200,

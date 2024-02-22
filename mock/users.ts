@@ -2,7 +2,7 @@ import mockjs from "mockjs";
 import { defineMock } from "umi";
 
 export default defineMock({
-    'GET /api/admin/users': (req, res) => {
+    'GET /api/users': (req, res) => {
         const { pageSize = 20 } = req.params
         setTimeout(() => {
             res.status(200).json(mockjs.mock({
@@ -23,7 +23,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'GET /api/admin/users/:id': (req, res) => {
+    'GET /api/users/:id': (req, res) => {
         const { id } = req.params
         setTimeout(() => {
             res.status(200).json(mockjs.mock({
@@ -40,7 +40,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'POST /api/admin/users': (req, res) => {
+    'POST /api/users': (req, res) => {
         setTimeout(() => {
             res.status(200).json(mockjs.mock({
                 code: 200,
@@ -49,7 +49,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'DELETE /api/admin/users/:id': (req, res) => {
+    'DELETE /api/users/:id': (req, res) => {
         const { id } = req.params
         setTimeout(() => {
             res.status(200).json(mockjs.mock({

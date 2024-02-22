@@ -2,7 +2,7 @@ import mockjs from "mockjs";
 import { defineMock } from "umi";
 
 export default defineMock({
-    'GET /api/admin/idps': (req, res) => {
+    'GET /api/idps': (req, res) => {
         setTimeout(() => {
             res.status(200)
                 .json(mockjs.mock({

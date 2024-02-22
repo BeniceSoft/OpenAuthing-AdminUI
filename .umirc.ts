@@ -4,16 +4,6 @@ export default defineConfig({
     title: 'OpenAuthing',
     // mock: false,
     esbuildMinifyIIFE: true,
-    proxy: {
-        '/api': {
-            'target': 'http://localhost:5129/',
-            'changeOrigin': true
-        },
-        '/uploadFiles': {
-            'target': 'http://localhost:5129/',
-            'changeOrigin': true
-        },
-    },
     routes: [
         {
             path: "/",
