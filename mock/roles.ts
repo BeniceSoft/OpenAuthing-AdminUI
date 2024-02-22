@@ -2,7 +2,7 @@ import mockjs from "mockjs";
 import { defineMock } from "umi";
 
 export default defineMock({
-    'GET /api/admin/roles': (req, res) => {
+    'GET /api/roles': (req, res) => {
         setTimeout(() => {
             res.status(200).json(mockjs.mock({
                 code: 200,
@@ -21,7 +21,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'GET /api/admin/roles/:id': (req, res) => {
+    'GET /api/roles/:id': (req, res) => {
         const { id } = req.params
 
         setTimeout(() => {
@@ -39,7 +39,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 1000));
     },
 
-    'POST /api/admin/roles': (req, res) => {
+    'POST /api/roles': (req, res) => {
         const { id } = req.params
 
         setTimeout(() => {
@@ -50,7 +50,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'PUT /api/admin/roles/:id': (req, res) => {
+    'PUT /api/roles/:id': (req, res) => {
         const { id } = req.params
 
         setTimeout(() => {
@@ -61,7 +61,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'DELETE /api/admin/roles/:id': (req, res) => {
+    'DELETE /api/roles/:id': (req, res) => {
         const { id } = req.params
 
         setTimeout(() => {
@@ -72,7 +72,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'PUT /api/admin/roles/:id/toggle-enabled': (req, res) => {
+    'PUT /api/roles/:id/toggle-enabled': (req, res) => {
         const { id } = req.params
 
         setTimeout(() => {
@@ -83,7 +83,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'GET /api/admin/roles/:id/subjects': (req, res) => {
+    'GET /api/roles/:id/subjects': (req, res) => {
         const { id } = req.params
 
         setTimeout(() => {
@@ -99,7 +99,7 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
-    'PUT /api/admin/roles/:id/subjects': (req, res) => {
+    'PUT /api/roles/:id/subjects': (req, res) => {
         const { id } = req.params
 
         setTimeout(() => {

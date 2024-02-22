@@ -2,7 +2,7 @@ import mockjs from "mockjs";
 import { defineMock } from "umi";
 
 export default defineMock({
-    'GET /api/admin/dataresource': (req, res) => {
+    'GET /api/dataresource': (req, res) => {
         setTimeout(() => {
             res.json(mockjs.mock({
                 code: 200,

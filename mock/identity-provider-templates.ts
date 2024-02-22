@@ -2,7 +2,7 @@ import { defineMock } from "umi";
 
 
 export default defineMock({
-    'GET /api/admin/idpTemplates': (req, res) => {
+    'GET /api/idpTemplates': (req, res) => {
         setTimeout(() => {
             res.json({
                 code: 200,

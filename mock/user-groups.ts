@@ -2,7 +2,7 @@ import mockjs from "mockjs";
 import { defineMock } from "umi";
 
 export default defineMock({
-    'GET /api/admin/usergroups': (req, res) => {
+    'GET /api/usergroups': (req, res) => {
         const { pageSize = 20 } = req.params
         setTimeout(() => {
             res.status(200).json(mockjs.mock({
