@@ -1,6 +1,7 @@
 import { defineConfig } from "umi";
 
 export default defineConfig({
+    base: "/",
     title: 'OpenAuthing',
     // mock: false,
     esbuildMinifyIIFE: true,
@@ -84,7 +85,7 @@ export default defineConfig({
     initialState: {},
     qiankun: {
         slave: {
-            // enable: false
+            enable: false
         },
     },
     define: {
