@@ -1,5 +1,4 @@
-import { RequestConfig, AxiosResponse, RequestOptions } from 'umi';
-import { ResponseResult } from "@/@types";
+teimport { ResponseResult } from "@/@types";
 import { initialTheme } from './lib/misc';
 import InitialStateModel from './@types/InitialStateModel';
 import { toast } from 'react-hot-toast';
