@@ -12,8 +12,8 @@ import { Outlet } from 'umi';
 const configuration: OidcConfiguration = {
   authority: ODIC_AUTHORITY,
   client_id: ODIC_CLIENT_ID,
-  redirect_uri: window.location.origin + '/am/admin/login',
-  silent_redirect_uri: window.location.origin + '/am/admin/silent-login',
+  redirect_uri: window.location.origin + '/admin/login',
+  silent_redirect_uri: window.location.origin + '/admin/silent-login',
   // silent_redirect_uri: window.location.origin + '/authentication/silent-callback', // Optional activate silent-signin that use cookies between OIDC server and client javascript to restore the session
   scope: 'openid profile phone roles offline_access',
   // service_worker_relative_url: '/OidcServiceWorker.js',
