@@ -12,6 +12,7 @@ import ApplicationService from "@/services/application.service"
 import Message from "@/components/Message"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import SearchInput from "@/components/SearchInput"
 
 const ClientsPage = ({
     isLoading,
@@ -85,14 +86,8 @@ const ClientsPage = ({
                         </Button>
                     )} />
                 <div className="py-2 mb-4 sticky -top-8 z-10 bg-white dark:bg-slate-900">
-                    <div className="w-[380px] py-1.5 px-2 transition duration-150 rounded bg-gray-50 flex items-center border border-transparent focus-within:bg-white focus-within:border-blue-600 focus-within:hover:bg-transparent hover:bg-gray-100 dark:bg-gray-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
-                            className="w-4 h-4 flex-initial stroke-gray-600">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                        </svg>
-                        <input type="text"
-                            placeholder="输入关键字查询"
-                            className="flex-1 border-none bg-transparent text-sm pl-2 py-0 inline-block focus:outline-none focus:ring-0 placeholder-gray-300"
+                    <div className="w-[380px]">
+                        <SearchInput placeholder="输入关键字查询"
                             value={searchKey}
                             onChange={onSearchKeyChange} />
                     </div>

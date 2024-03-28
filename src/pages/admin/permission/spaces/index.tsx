@@ -6,6 +6,7 @@ import { SearchIcon } from "lucide-react"
 import PermissionSpaceService from "@/services/permission-space.service"
 import { ChangeEvent, useState } from "react"
 import { Badge } from "@/components/ui/badge"
+import SearchInput from "@/components/SearchInput"
 
 export default () => {
     const { loading, data, run: fetch } = useRequest((searchKey?: string) => {
@@ -29,11 +30,8 @@ export default () => {
             )} />
 
             <div className="flex-1 flex flex-col overflow-hidden gap-y-4 text-sm">
-                <div className="bg-gray-100 p-2 rounded w-1/3 max-w-sm flex gap-x-2 items-center">
-                    <SearchIcon className="w-5 h-5 text-gray-400" />
-                    <input className="flex-1 bg-transparent focus:outline-none placeholder:text-gray-400"
-                        placeholder="搜索权限空间名称"
-                        maxLength={100}
+                <div className="w-1/3 max-w-sm">
+                    <SearchInput placeholder="搜索权限空间名称"
                         onChange={onSearchKeyChange} />
                 </div>
                 <Table<any> isLoading={loading}
