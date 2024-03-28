@@ -2,9 +2,8 @@ import Spin from '@/components/Spin';
 import Authenticating from '@/components/oidc/Authenticating';
 import AuthenticatingError from '@/components/oidc/AuthenticatingError';
 import CallBackSuccess from '@/components/oidc/CallBackSuccess';
-import OidcProvider from '@/components/oidc/OidcProvider';
 import SessionLostCompoent from '@/components/oidc/SessionLost';
-import { OidcConfiguration, TokenRenewMode } from '@axa-fr/react-oidc';
+import { OidcConfiguration, OidcProvider, TokenRenewMode } from '@axa-fr/react-oidc';
 import { OidcClient } from '@axa-fr/oidc-client'
 import { Toaster, toast } from 'react-hot-toast';
 import { Outlet } from 'umi';

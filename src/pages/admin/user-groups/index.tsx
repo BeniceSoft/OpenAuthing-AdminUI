@@ -33,9 +33,9 @@ const UserGroupManagementPage = () => {
                 </Button>
             )} />
             <div className="flex-1 flex flex-col overflow-hidden gap-y-4 text-sm">
-                <div className="bg-gray-100 p-2 rounded w-1/3 max-w-sm flex gap-x-2 items-center">
+                <div className="bg-gray-100 px-2 rounded w-1/3 max-w-sm flex gap-x-2 items-center">
                     <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
-                    <input className="flex-1 bg-transparent focus:outline-none placeholder:text-gray-400"
+                    <input className="flex-1 bg-transparent border-none focus:ring-0 placeholder:text-gray-400"
                         placeholder="搜索名称、标识"
                         maxLength={100} />
                 </div>

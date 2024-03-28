@@ -11,7 +11,5 @@ export function enabledStatusDescription(enabled: boolean) {
 }
 
 export const getOidc = (configurationName?: string) => {
-    return window.__POWERED_BY_QIANKUN__ ?
-        window.qiankun.getOidc(configurationName)
-        : OidcClient.get(configurationName)
+    return OidcClient.get(configurationName)
 }

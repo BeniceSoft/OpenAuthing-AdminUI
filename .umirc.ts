@@ -73,8 +73,7 @@ export default defineConfig({
         '@umijs/plugins/dist/model',
         "@umijs/plugins/dist/tailwindcss",
         "@umijs/plugins/dist/dva",
-        "@umijs/plugins/dist/request",
-        "@umijs/plugins/dist/qiankun",
+        "@umijs/plugins/dist/request"
     ],
     dva: {},
     request: {
@@ -83,11 +82,6 @@ export default defineConfig({
     clientLoader: {},
     model: {},
     initialState: {},
-    qiankun: {
-        slave: {
-            enable: false
-        },
-    },
     define: {
         SHOW_OIDC_LOGGING: false,
 

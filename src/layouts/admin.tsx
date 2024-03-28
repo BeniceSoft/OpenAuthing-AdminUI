@@ -11,7 +11,7 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipProvider, TooltipTrigger 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { PowerIcon } from "lucide-react";
 import { LinkProps } from "react-router-dom";
-import { withOidcSecure, useOidc, useOidcUser } from "@/components/oidc/OidcSecure";
+import { useOidc, useOidcUser, withOidcSecure } from "@axa-fr/react-oidc";
 
 const AdminHeader = () => {
     const { initialState, loading, error, refresh, setInitialState } = useModel('@@initialState');

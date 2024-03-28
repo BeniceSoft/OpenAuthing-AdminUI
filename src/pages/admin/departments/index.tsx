@@ -248,8 +248,8 @@ const OrgManagementPage = ({
                         <div className="flex h-8 w-full mb-2 items-center justify-start pr-5">
                             <div className="flex-1 flex mr-2 w-40 h-full items-center justify-start rounded bg-gray-100 px-2 gap-x-2">
                                 <Search className="w-4 h-4 stroke-gray-400" />
-                                <input className="flex-1 min-w-0 bg-transparent focus:outline-none text-sm placeholder:text-gray-400"
-                                    value={searchKey}
+                                <input className="border-none flex-1 min-w-0 bg-transparent focus:ring-0 text-sm placeholder:text-gray-400"
+                                    value={searchKey} type="search"
                                     onChange={onSearchKeyChange}
                                     placeholder="搜索成员、部门" />
                                 {searchKey.trim() !== '' &&

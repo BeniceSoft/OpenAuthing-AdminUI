@@ -1,9 +1,9 @@
 import greetImg from '@/assets/images/greet-bg.png'
-import { useOidcUser } from "@/components/oidc/OidcSecure"
 import StartStep from "./components/StartStep"
 import { Link, useModel } from 'umi'
 import { HelpCircle } from 'lucide-react'
 import { Line, LineChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { useOidcUser } from '@axa-fr/react-oidc'
 
 const StartSteps = [{
     title: '设置登录页',
