@@ -3,3 +3,4 @@
 **/.umi-production
 pnpm-lock.yaml
 package-lock.json
+.idea

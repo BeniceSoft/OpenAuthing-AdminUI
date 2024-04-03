@@ -2,8 +2,7 @@ import PageHeader from "@/components/PageHeader"
 import Tree from "@/components/Tree"
 import { useEffect, useRef, useState } from "react"
 import TreeNode from "@/@types/TreeNode"
-import { Dispatch, connect, history } from "umi"
-import { DepartmentsModelState } from "@/models/departments"
+import { history, useModel } from "umi"
 import DepartmentDialog, { DepartmentDialogRef } from "./components/DepartmentDialog"
 import classNames from "classnames"
 import DepartmentService from "@/services/department.service"
@@ -12,26 +11,15 @@ import { confirm } from '@/components/Modal'
 import AddMemberDialog from "./components/AddMemberDialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ChevronDownIcon, MoreHorizontal, Plus, Search, XCircle } from "lucide-react"
-import { DepartmentMember } from "@/@types/department"
 import DepartmentMemberTable from "./components/DepartmentMemberTable"
 import { Button } from "@/components/ui/button"
 import DepartmentAndUserList from "./components/DepartmentAndUserList"
 import { TableRef } from "@/components/Table"
 
 interface OrgManagementPageProps {
-    isLoadingRootDepartment?: boolean
-    isLoadingMembers?: boolean
-    departmentTree?: TreeNode[]
-    departmentMembers?: { totalCount: number, items: DepartmentMember[] }
-    dispatch: Dispatch
 }
 
-const OrgManagementPage = ({
-    isLoadingRootDepartment,
-    isLoadingMembers,
-    departmentTree,
-    departmentMembers,
-    dispatch
+export default ({
 }: OrgManagementPageProps) => {
     const [searchKey, setSearchKey] = useState('')
     const [selectedNode, setSelectedNode] = useState<TreeNode>()
@@ -43,25 +31,18 @@ const OrgManagementPage = ({
     const tableRef = useRef<TableRef>(null)
     const departmentDialogRef = useRef<DepartmentDialogRef>(null)
 
-    const { totalCount, items: departmentUsers = [] } = departmentMembers ?? {}
+    const {
+        loading: isLoadingRootDepartment,
+        departmentTree,
+        fetchDepartments,
+        clear
+    } = useModel("admin.departments.index")
 
     useEffect(() => {
-        dispatch({
-            type: 'departments/fetchRoot',
-            payload: {}
-        })
+        fetchDepartments()
 
-        return () => {
-            dispatch({ type: 'departments/clear' })
-        }
+        return clear
     }, [])
-
-    useEffect(() => {
-        const firstDepartment = departmentTree?.at(0)
-        if (selectedNode === undefined && firstDepartment) {
-            setSelectedNode(firstDepartment)
-        }
-    }, [departmentTree])
 
     // 消费消息队列中的消息
     useEffect(() => {
@@ -94,27 +75,16 @@ const OrgManagementPage = ({
     }
 
     // 加载子部门列表
-    const onLoadData = ({ key, children }: TreeNode) => {
+    const onLoadData = async ({ key, children }: TreeNode) => {
         console.log('load data', key)
 
-        return new Promise<void>(resolve => {
-            if (children) {
-                resolve()
-                return
-            }
+        if (children) return
 
-            dispatch({
-                type: 'departments/fetchChildren',
-                payload: {
-                    parentId: key,
-                    callback: resolve
-                }
-            })
-        })
+        await fetchDepartments(key)
     }
 
     // 打开新建/编辑组织弹窗
-    const openOrgDialog = (departmentId?: string) => {
+    const openDepartmentDialog = (departmentId?: string) => {
         let action: any = 'create'
         let data = undefined
         if (departmentId) {
@@ -127,13 +97,13 @@ const OrgManagementPage = ({
         departmentDialogRef.current?.open(action, data)
     }
 
-    // 关闭新建/编辑组织弹窗
-    const closeOrgDialog = () => {
+    // 关闭新建/编辑部门弹窗
+    const closeDepartmentDialog = () => {
         departmentDialogRef.current?.close()
     }
 
-    // 处理创建/修改组织
-    const handleCreateOrUpdateOrg = async (actionType: string, value: any) => {
+    // 处理创建/修改部门
+    const handleCreateOrUpdateDepartment = async (actionType: string, value: any) => {
         const { id = '' } = value
         setOrgProcessing(true)
         try {
@@ -149,7 +119,7 @@ const OrgManagementPage = ({
                 }
             }
 
-            closeOrgDialog()
+            closeDepartmentDialog()
             return true
         }
         catch {
@@ -157,10 +127,7 @@ const OrgManagementPage = ({
         }
         finally {
             setOrgProcessing(false)
-            dispatch({
-                type: 'departments/fetchRoot',
-                payload: {}
-            })
+            await fetchDepartments()
         }
     }
 
@@ -176,21 +143,20 @@ const OrgManagementPage = ({
 
     const handleAddMembers = (userIds: string[]) => {
         const pagination = tableRef.current?.currentPagination()
-        dispatch({
-            type: 'departments/addMembers',
-            payload: {
-                ...pagination,
-                departmentId: selectedNode?.key,
-                userIds,
-            }
-        })
+        // dispatch({
+        //     type: 'departments/addMembers',
+        //     payload: {
+        //         ...pagination,
+        //         departmentId: selectedNode?.key,
+        //         userIds,
+        //     }
+        // })
 
         setAddMemberDialogOpened(false)
     }
 
     const renderTreeNodeMenu = (node: TreeNode, selected: boolean) => {
         const isOrg = node.parentId === '' || node.parentId === null || typeof node.parentId === 'undefined'
-        const typeName = isOrg ? '组织' : '部门'
 
         return (
             <DropdownMenu modal={false}>
@@ -208,11 +174,11 @@ const OrgManagementPage = ({
                         <DropdownMenuItem>
                             <span>添加子部门</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => openOrgDialog(node.key)}>
-                            <span>编辑{typeName}</span>
+                        <DropdownMenuItem onClick={() => openDepartmentDialog(node.key)}>
+                            <span>编辑部门</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleDeleteDepartment(node)}>
-                            <span>删除{typeName}</span>
+                            <span>删除部门</span>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
@@ -246,36 +212,18 @@ const OrgManagementPage = ({
                 <div className="flex w-full flex-1 mt-6 overflow-y-hidden">
                     <div className="flex flex-col w-64 min-w-[256px] border-r overflow-y-hidden">
                         <div className="flex h-8 w-full mb-2 items-center justify-start pr-5">
-                            <div className="flex-1 flex mr-2 w-40 h-full items-center justify-start rounded bg-gray-100 px-2 gap-x-2">
+                            <div className="flex-1 flex mr-1 w-44 h-full items-center justify-start rounded bg-gray-100 px-2 gap-x-1">
                                 <Search className="w-4 h-4 stroke-gray-400" />
-                                <input className="border-none flex-1 min-w-0 bg-transparent focus:ring-0 text-sm placeholder:text-gray-400"
+                                <input className="border-none px-0 flex-1 min-w-0 bg-transparent focus:ring-0 text-sm placeholder:text-gray-400"
                                     value={searchKey} type="search"
                                     onChange={onSearchKeyChange}
                                     placeholder="搜索成员、部门" />
-                                {searchKey.trim() !== '' &&
-                                    <span className="w-4 h-4 cursor-pointer">
-                                        <XCircle className="w-full h-full fill-gray-400" onClick={() => setSearchKey('')} />
-                                    </span>
-                                }
                             </div>
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild={true}>
-                                    <button className="px-1 gap-x-0 flex items-center justify-center w-full h-full bg-gray-100 text-gray-600 rounded text-sm hover:bg-gray-200 focus-visible:outline-none transition-colors">
-                                        <Plus className="w-4 h-4" />
-                                        <span>新建</span>
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="p-2 text-sm text-gray-600">
-                                    <DropdownMenuGroup>
-                                        <DropdownMenuItem onClick={() => openOrgDialog()}>
-                                            <span>添加部门</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => openOrgDialog()}>
-                                            <span>添加组织</span>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <button onClick={() => openDepartmentDialog()}
+                                className="px-1 gap-x-0 flex items-center justify-center w-full h-full bg-gray-100 text-gray-600 rounded text-sm hover:bg-gray-200 focus-visible:outline-none transition-colors">
+                                <Plus className="w-4 h-4" />
+                                <span>新建</span>
+                            </button>
                         </div>
                         {searchKey === '' ?
                             <Tree className="flex-1 w-full overflow-y-auto pr-5"
@@ -290,26 +238,18 @@ const OrgManagementPage = ({
                     <div className="flex-1 pl-8">
                         <DepartmentMemberTable tableRef={tableRef}
                             isNone={typeof selectedNode === 'undefined' || selectedNode === null}
-                            isLoading={isLoadingMembers}
                             departmentId={selectedNode?.key}
                             departmentName={selectedNode?.title}
-                            totalCount={totalCount}
-                            items={departmentUsers}
-                            dispatch={dispatch}
                             onAddMember={() => setAddMemberDialogOpened(true)} />
                     </div>
                 </div>
             </div>
-            <DepartmentDialog ref={departmentDialogRef} isProcessing={isOrgProcessing} onConfirm={handleCreateOrUpdateOrg} />
+            <DepartmentDialog ref={departmentDialogRef}
+                isProcessing={isOrgProcessing}
+                onConfirm={handleCreateOrUpdateDepartment} />
             <AddMemberDialog open={addMemberDialogOpened} onOpenChange={setAddMemberDialogOpened}
                 department={{ ...selectedNode }}
                 onAdd={handleAddMembers} />
         </>
     )
 }
-
-export default connect(({ departments, loading }: { loading: any, departments: DepartmentsModelState }) => ({
-    isLoadingRootDepartment: loading.effects['departments/fetchRoot'],
-    isLoadingMembers: loading.effects['departments/fetchMembers'],
-    ...departments
-}))(OrgManagementPage)

@@ -23,7 +23,6 @@ export const request: RequestConfig = {
         },
         // 错误接收及处理
         errorHandler: (error: any, opts: any) => {
-            console.error(error)
             if (opts?.skipErrorHandler) throw error;
             // 我们的 errorThrower 抛出的错误。
             if (error.name === 'BizError') {
@@ -40,7 +39,11 @@ export const request: RequestConfig = {
             } else if (error.response) {
                 // Axios 的错误
                 // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-                toast.error(`Response status:${error.response.status}`);
+                let message = `Response status:${error.response.status}`
+                if (error.response.status === 404) {
+                    message = "请求接口不存在"
+                }
+                toast.error(message);
             } else if (error.request) {
                 // 请求已经成功发起，但没有收到响应
                 // \`error.request\` 在浏览器中是 XMLHttpRequest 的实例，
@@ -55,9 +58,8 @@ export const request: RequestConfig = {
     requestInterceptors: [
         async (config: RequestOptions) => {
             const oidc = getOidc()
-            console.log('oidc', oidc)
             let headers = config.headers || {}
-            if (oidc.tokens) {
+            if (oidc && oidc?.tokens) {
                 headers['Authorization'] = `Bearer ${oidc.tokens.accessToken}`
             }
 

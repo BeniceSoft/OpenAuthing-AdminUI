@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input, InputLabel } from "@/components/ui/input";
-import { Fragment, forwardRef, useEffect, useImperativeHandle, useState } from "react"
+import { Fragment, forwardRef, useImperativeHandle, useState } from "react"
 import { useForm } from "react-hook-form"
 
 interface DepartmentDialogRefProps {
@@ -52,31 +52,31 @@ const DepartmentDialog = forwardRef<DepartmentDialogRef, DepartmentDialogRefProp
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        {ACTION_TEXTS[actionType].title}组织
+                        {ACTION_TEXTS[actionType].title}部门
                     </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <input type="hidden" {...register('id')} />
                     <div>
                         <div className="flex flex-col gap-y-8 w-full">
-                            <InputLabel text="组织名称" required>
+                            <InputLabel text="部门名称" required>
                                 <Input type="text"
-                                    placeholder="请输入组织名称"
+                                    placeholder="请输入部门名称"
                                     disabled={isProcessing}
                                     aria-invalid={errors.name ? 'true' : 'false'}
                                     {...register('name', { required: true })} />
                             </InputLabel>
-                            <InputLabel text="组织标识" required>
+                            <InputLabel text="部门标识" required>
                                 <Input type="text"
-                                    placeholder="请输入组织标识"
+                                    placeholder="请输入部门标识"
                                     disabled={isProcessing}
                                     aria-invalid={errors.code ? 'true' : 'false'}
                                     {...register('code', { required: true })} />
                             </InputLabel>
-                            <InputLabel text="组织描述">
+                            <InputLabel text="部门描述">
                                 <textarea
                                     className="w-full border-none rounded bg-gray-100 dark:bg-gray-700 text-sm focus:bg-white transition duration-300 placeholder:text-gray-300"
-                                    placeholder="请输入组织描述"
+                                    placeholder="请输入部门描述"
                                     disabled={isProcessing}
                                     {...register('description')} />
                             </InputLabel>

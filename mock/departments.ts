@@ -61,10 +61,19 @@ export default defineMock({
                         'departments|1-5': [{
                             departmentId: '@guid',
                             departmentName: '@ctitle(2, 4)'
-                        }] 
+                        }]
                     }]
                 }
             }))
+        }, mockjs.Random.integer(300, 3000));
+    },
+
+    'PUT /api/departments/:departmentId/members/:userId/leader': (req, res) => {
+        setTimeout(() => {
+            res.status(200).json({
+                code: 200,
+                data: true
+            })
         }, mockjs.Random.integer(300, 3000));
     }
 })

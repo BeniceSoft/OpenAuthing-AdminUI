@@ -6,7 +6,7 @@ const ROOT_URL = "/api/departments"
 const DepartmentService = {
     getAll: async (parentId?: string) => {
         const { data } = await request(`${ROOT_URL}?parentId=${parentId ?? ''}`)
-        return data.map((x: any) => ({ ...x, key: x.id, title: x.name }))
+        return data
     },
 
     create: async (input: DepartmentModel) => {
@@ -31,8 +31,8 @@ const DepartmentService = {
 
     getDepartmentMembers: async ({
         departmentId, pageIndex = 1, pageSize = 20, onlyDirectUsers
-    }: { departmentId: string | null, pageIndex: number | null, pageSize: number | null, onlyDirectUsers: boolean | null }) => {
-        const { data } = await request(`${ROOT_URL}/${departmentId}/members`, {
+    }: { departmentId?: string | null, pageIndex: number | null, pageSize: number | null, onlyDirectUsers: boolean | null }) => {
+        return await request(`${ROOT_URL}/${departmentId}/members`, {
             method: 'GET',
             params: {
                 pageIndex,
@@ -40,8 +40,6 @@ const DepartmentService = {
                 onlyDirectUsers
             }
         })
-
-        return data
     },
 
     addDepartmentMembers: async ({
@@ -58,13 +56,12 @@ const DepartmentService = {
     setLeader: async ({
         departmentId, userId, isLeader
     }: { departmentId: string, userId: string, isLeader: boolean }) => {
-        const { data } = await request(`/api/departments/${departmentId}/members/${userId}/leader`, {
+        return await request(`/api/departments/${departmentId}/members/${userId}/leader`, {
             method: 'PUT',
             params: {
                 isLeader
             }
         })
-        return data === true
     }
 }
 

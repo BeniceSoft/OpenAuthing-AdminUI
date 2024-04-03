@@ -2,7 +2,7 @@ import Spin from '@/components/Spin';
 import Authenticating from '@/components/oidc/Authenticating';
 import AuthenticatingError from '@/components/oidc/AuthenticatingError';
 import CallBackSuccess from '@/components/oidc/CallBackSuccess';
-import SessionLostCompoent from '@/components/oidc/SessionLost';
+import SessionLostComponent from '@/components/oidc/SessionLost';
 import { OidcConfiguration, OidcProvider, TokenRenewMode } from '@axa-fr/react-oidc';
 import { OidcClient } from '@axa-fr/oidc-client'
 import { Toaster, toast } from 'react-hot-toast';
@@ -26,7 +26,7 @@ export default function Layout() {
 
   const handleOidcEvent = (configName: string, eventName: string, data: any) => {
 
-    SHOW_OIDC_LOGGING && console.log(`oidc:${configName}:${eventName}: ${JSON.stringify(data)}`)
+    // SHOW_OIDC_LOGGING && console.log(`oidc:${configName}:${eventName}: ${JSON.stringify(data)}`)
 
     if (eventName === OidcClient.eventNames.refreshTokensAsync_end &&
       data.success) {
@@ -41,7 +41,7 @@ export default function Layout() {
       authenticatingComponent={Authenticating}
       authenticatingErrorComponent={AuthenticatingError}
       callbackSuccessComponent={CallBackSuccess}
-      sessionLostComponent={SessionLostCompoent}
+      sessionLostComponent={SessionLostComponent}
       onEvent={handleOidcEvent}>
       <Toaster />
       <Outlet />

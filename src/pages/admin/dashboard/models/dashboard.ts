@@ -11,8 +11,8 @@ export default () => {
 
         data.push({
             date: date.format('MM/DD'),
-            登录人次: Random.integer(0, 1000),
-            登录人数: Random.integer(0, 1000),
+            登录人次: Random.integer(600, 1000),
+            登录人数: Random.integer(800, 1000),
         })
     }
 

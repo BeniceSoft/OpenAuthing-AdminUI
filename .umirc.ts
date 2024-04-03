@@ -79,6 +79,9 @@ export default defineConfig({
     request: {
         dataField: 'data'
     },
+    favicons: [
+        '/favicon.png'
+    ],
     clientLoader: {},
     model: {},
     initialState: {},

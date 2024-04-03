@@ -5,33 +5,28 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { enabledStatusDescription } from "@/lib/utils"
+import DepartmentService from "@/services/department.service"
 import { MoreHorizontalIcon, Plus, User, Users } from "lucide-react"
 import { useEffect, useState } from "react"
-import { Dispatch, history } from "umi"
+import toast from "react-hot-toast"
+import { history, useRequest } from "umi"
 
 export interface UserTableProps {
     isNone?: boolean
-    isLoading?: boolean
     departmentId?: string
     departmentName?: string
-    totalCount?: number
-    items?: DepartmentMember[]
-    dispatch: Dispatch
     onAddMember?: () => void
     tableRef?: React.MutableRefObject<any>
 }
 
 export default ({
     isNone = true,
-    isLoading,
     departmentId,
     departmentName,
-    totalCount,
-    items = [],
     tableRef,
-    dispatch,
     onAddMember
 }: UserTableProps) => {
     const [onlyDirectUsers, setOnlyDirectUsers] = useState(false)
@@ -46,36 +41,43 @@ export default ({
             pageIndex: 1,
             pageSize: 20,
         })
+
     }, [onlyDirectUsers, departmentId])
 
-    const fetchDepartmentUsers = (params: { pageIndex: number, pageSize: number }) => {
-        dispatch({
-            type: 'departments/fetchMembers',
-            payload: {
-                ...params,
-                departmentId,
-                onlyDirectUsers
-            }
-        })
-    }
+    const { loading, data, run: fetchDepartmentUsers, mutate } = useRequest(
+        (params: { pageIndex: number, pageSize: number }) => DepartmentService.getDepartmentMembers({ ...params, departmentId, onlyDirectUsers }),
+        { manual: true, initialData: { totalCount: 0, items: [] } }
+    )
+
+    const { loading: setLeaderLoading, run: setLeader, } = useRequest(
+        async (userId: string, isLeader: boolean) => DepartmentService.setLeader({ departmentId: departmentId!, userId, isLeader }),
+        {
+            manual: true, onSuccess: (result, params) => {
+                console.log(result)
+                if (result) {
+                    toast.success(`已${params[1] ? '设为' : '取消'}部门负责人`);
+                    mutate((x: { totalCount: number, items: DepartmentMember[] }) => {
+
+                        const items = x.items.map(item => {
+                            if (item.id === params[0]) {
+                                item.isLeader = params[1]
+                            }
+                            return item
+                        })
+
+                        return {
+                            ...x,
+                            items
+                        }
+                    })
+                }
+            },
+        }
+    )
 
     const handlePageChanged = async (pagination: { pageSize: number, pageIndex: number }) => {
         fetchDepartmentUsers({
             ...pagination
-        })
-    }
-
-    const setLeader = (userId: string, isLeader: boolean) => {
-        const pagination = tableRef?.current?.currentPagination()
-        dispatch({
-            type: 'departments/setLeader',
-            payload: {
-                ...pagination,
-                departmentId,
-                userId,
-                isLeader,
-                onlyDirectUsers,
-            }
         })
     }
 
@@ -195,40 +197,43 @@ export default ({
         <Empty isEmpty={isNone}
             description="选择部门来管理成员">
             <div className="flex w-full h-full flex-col overflow-hidden">
-                <div className="flex items-center justify-between h-8 mb-2 text-sm">
-                    <div className="flex-1 flex gap-x-4">
-                        <span className="font-semibold">{departmentName}</span>
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <div className="flex items-center text-gray-400 gap-x-1 text-xs ">
-                                        <Users className="w-4 h-4" />
-                                        {totalCount}
-                                    </div>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <div>{totalCount} 成员</div>
-                                    <TooltipArrow />
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                        <label className="select-none flex items-center gap-x-1">
-                            <input type="checkbox" checked={onlyDirectUsers}
-                                className=""
-                                onChange={e => { setOnlyDirectUsers(e.target.checked) }} />
-                            仅展示部门的直属成员
-                        </label>
+                {loading || setLeaderLoading ?
+                    <Skeleton className="h-10 mb-1 w-full" /> :
+                    <div className="flex items-center justify-between h-8 mb-2 text-sm">
+                        <div className="flex-1 flex gap-x-4">
+                            <span className="font-semibold">{departmentName}</span>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div className="flex items-center text-gray-400 gap-x-1 text-xs ">
+                                            <Users className="w-4 h-4" />
+                                            {data?.totalCount}
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <div>{data?.totalCount} 成员</div>
+                                        <TooltipArrow />
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                            <label className="select-none flex items-center gap-x-1">
+                                <input type="checkbox" checked={onlyDirectUsers}
+                                    className=""
+                                    onChange={e => { setOnlyDirectUsers(e.target.checked) }} />
+                                仅展示部门的直属成员
+                            </label>
+                        </div>
+                        <Button variant="link"
+                            onClick={onAddMember}>
+                            <Plus className="w-4 h-4" />
+                            <span>添加成员</span>
+                        </Button>
                     </div>
-                    <Button variant="link"
-                        onClick={onAddMember}>
-                        <Plus className="w-4 h-4" />
-                        <span>添加成员</span>
-                    </Button>
-                </div>
+                }
                 <div className="flex-1 flex flex-col h-full relative overflow-hidden">
                     <Table<DepartmentMember> ref={tableRef}
-                        columns={columns} isLoading={isLoading}
-                        totalCount={totalCount ?? 0} items={items}
+                        columns={columns} isLoading={loading || setLeaderLoading}
+                        {...data}
                         onPageChanged={handlePageChanged} />
                 </div>
             </div>
