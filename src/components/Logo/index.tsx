@@ -35,7 +35,7 @@ export const Text = ({className}: { className?: string }) => {
 export default () => {
     return (
         <div className="flex items-center gap-x-1">
-            <Icon className="w-10 h-10"/>
+            <Icon className="w-8 h-8"/>
             <Text className="flex-1"/>
         </div>
     )

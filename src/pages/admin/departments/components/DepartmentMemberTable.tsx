@@ -1,6 +1,6 @@
 import { DepartmentMember, UserDepartment } from "@/@types/department"
 import Empty from "@/components/Empty"
-import { Table, ColumnType } from "@/components/Table"
+import { Table, ColumnType, TableRef } from "@/components/Table"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -10,11 +10,12 @@ import { Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, 
 import { enabledStatusDescription } from "@/lib/utils"
 import DepartmentService from "@/services/department.service"
 import { MoreHorizontalIcon, Plus, User, Users } from "lucide-react"
+import React from "react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { history, useRequest } from "umi"
 
-export interface UserTableProps {
+export interface DepartmentMemberTableProps {
     isNone?: boolean
     departmentId?: string
     departmentName?: string
@@ -22,13 +23,17 @@ export interface UserTableProps {
     tableRef?: React.MutableRefObject<any>
 }
 
-export default ({
+export type DepartmentMemberTableRef = {
+    refush: () => void
+} & TableRef
+
+const DepartmentMemberTable = ({
     isNone = true,
     departmentId,
     departmentName,
     tableRef,
     onAddMember
-}: UserTableProps) => {
+}: DepartmentMemberTableProps) => {
     const [onlyDirectUsers, setOnlyDirectUsers] = useState(false)
 
     // 部门切换时重新拉取部门用户列表
@@ -240,3 +245,9 @@ export default ({
         </Empty>
     )
 }
+
+const ForwardedTable = React.forwardRef(DepartmentMemberTable) as (
+    props: DepartmentMemberTableProps & { ref?: React.Ref<DepartmentMemberTableRef> }
+) => React.ReactElement;
+
+export default ForwardedTable

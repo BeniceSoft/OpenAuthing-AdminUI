@@ -11,10 +11,11 @@ import { confirm } from '@/components/Modal'
 import AddMemberDialog from "./components/AddMemberDialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ChevronDownIcon, MoreHorizontal, Plus, Search, XCircle } from "lucide-react"
-import DepartmentMemberTable from "./components/DepartmentMemberTable"
+import DepartmentMemberTable, { DepartmentMemberTableRef } from "./components/DepartmentMemberTable"
 import { Button } from "@/components/ui/button"
 import DepartmentAndUserList from "./components/DepartmentAndUserList"
 import { TableRef } from "@/components/Table"
+import toast from "react-hot-toast"
 
 interface OrgManagementPageProps {
 }
@@ -28,7 +29,7 @@ export default ({
     const [isOrgProcessing, setOrgProcessing] = useState(false)
     const [addMemberDialogOpened, setAddMemberDialogOpened] = useState<boolean>()
 
-    const tableRef = useRef<TableRef>(null)
+    const tableRef = useRef<DepartmentMemberTableRef>(null)
     const departmentDialogRef = useRef<DepartmentDialogRef>(null)
 
     const {
@@ -143,16 +144,17 @@ export default ({
 
     const handleAddMembers = (userIds: string[]) => {
         const pagination = tableRef.current?.currentPagination()
-        // dispatch({
-        //     type: 'departments/addMembers',
-        //     payload: {
-        //         ...pagination,
-        //         departmentId: selectedNode?.key,
-        //         userIds,
-        //     }
-        // })
+
+        const addedCount = DepartmentService.addDepartmentMembers({
+            ...pagination,
+            departmentId: selectedNode?.key!,
+            userIds,
+        })
+
+        toast.success(`已添加 ${addedCount} 个成员`)
 
         setAddMemberDialogOpened(false)
+        tableRef.current?.refush()
     }
 
     const renderTreeNodeMenu = (node: TreeNode, selected: boolean) => {

@@ -17,12 +17,12 @@ const GreetingIcon = () => {
         return <Sunrise className={cn("stroke-orange-500 fill-orange-400", className)} />
     }
 
-    if (hour > 8 && hour <= 18) {
+    if (hour > 8 && hour < 18) {
         return <Sun className={cn("stroke-orange-700 fill-orange-600", className)} />;
     }
 
-    if (hour > 18 && hour <= 20) {
-        return <Sunset className={cn("stroke-orange-800 fill-orange-700", className)} />
+    if (hour >= 18 && hour <= 20) {
+        return <Sunset className={cn("stroke-amber-800 fill-amber-500", className)} />
     }
 
 
