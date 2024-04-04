@@ -1,6 +1,6 @@
 import { request } from "@/lib/request"
 
-const ROOT_URL = "/api/idpTemplates"
+const ROOT_URL = "/api/admin/idpTemplates"
 
 const IdentityProviderTemplateService = {
     getAll: async () => {

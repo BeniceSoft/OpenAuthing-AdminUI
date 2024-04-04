@@ -14,7 +14,6 @@ import { ChevronDownIcon, MoreHorizontal, Plus, Search, XCircle } from "lucide-r
 import DepartmentMemberTable, { DepartmentMemberTableRef } from "./components/DepartmentMemberTable"
 import { Button } from "@/components/ui/button"
 import DepartmentAndUserList from "./components/DepartmentAndUserList"
-import { TableRef } from "@/components/Table"
 import toast from "react-hot-toast"
 
 interface OrgManagementPageProps {
@@ -142,24 +141,22 @@ export default ({
         })
     }
 
-    const handleAddMembers = (userIds: string[]) => {
-        const pagination = tableRef.current?.currentPagination()
-
-        const addedCount = DepartmentService.addDepartmentMembers({
-            ...pagination,
+    const handleAddMembers = async (userIds: string[]) => {
+        const addedCount = await DepartmentService.addDepartmentMembers({
             departmentId: selectedNode?.key!,
             userIds,
         })
 
-        toast.success(`已添加 ${addedCount} 个成员`)
-
         setAddMemberDialogOpened(false)
-        tableRef.current?.refush()
+
+        if (addedCount) {
+
+            toast.success(`已添加 ${addedCount} 个成员`)
+            await tableRef.current?.refresh()
+        }
     }
 
     const renderTreeNodeMenu = (node: TreeNode, selected: boolean) => {
-        const isOrg = node.parentId === '' || node.parentId === null || typeof node.parentId === 'undefined'
-
         return (
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild={true}>
@@ -222,8 +219,8 @@ export default ({
                                     placeholder="搜索成员、部门" />
                             </div>
                             <button onClick={() => openDepartmentDialog()}
-                                className="px-1 gap-x-0 flex items-center justify-center w-full h-full bg-gray-100 text-gray-600 rounded text-sm hover:bg-gray-200 focus-visible:outline-none transition-colors">
-                                <Plus className="w-4 h-4" />
+                                className="px-1 gap-x-0 flex items-center justify-center w-full h-full bg-gray-100 text-gray-500 rounded text-sm hover:bg-gray-200 focus-visible:outline-none transition-colors">
+                                <Plus className="w-3 h-3" />
                                 <span>新建</span>
                             </button>
                         </div>
@@ -238,11 +235,12 @@ export default ({
                         }
                     </div>
                     <div className="flex-1 pl-8">
-                        <DepartmentMemberTable tableRef={tableRef}
+                        <DepartmentMemberTable ref={tableRef}
                             isNone={typeof selectedNode === 'undefined' || selectedNode === null}
-                            departmentId={selectedNode?.key}
+                            departmentId={selectedNode?.key!}
                             departmentName={selectedNode?.title}
-                            onAddMember={() => setAddMemberDialogOpened(true)} />
+                            onAddMember={() => setAddMemberDialogOpened(true)}
+                        />
                     </div>
                 </div>
             </div>

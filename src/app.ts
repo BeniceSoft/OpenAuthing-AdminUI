@@ -64,9 +64,9 @@ export const request: RequestConfig = {
             }
 
             let baseURL: string | null = ADMIN_API_BASE_URL
-            if (process.env.NODE_ENV === 'development') {
-                baseURL = null
-            }
+            // if (process.env.NODE_ENV === 'development') {
+            //     baseURL = null
+            // }
             const newConfig = {
                 ...config,
                 baseURL,

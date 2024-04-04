@@ -4,7 +4,7 @@ const AccountService = {
     uploadAvatar: async (avatarBlob: Blob) => {
         const formData = new FormData()
         formData.append('file', avatarBlob)
-        await request('/api/account/uploadavatar', {
+        await request('/api/admin/account/uploadavatar', {
             method: 'put',
             data: formData,
             headers: {
@@ -14,7 +14,7 @@ const AccountService = {
     },
 
     getProfile: async () => {
-        const { data } = await request('/api/account/profile')
+        const { data } = await request('/api/admin/account/profile')
 
         return data
     }

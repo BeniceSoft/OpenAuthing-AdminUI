@@ -3,7 +3,7 @@ import { defineConfig } from "umi";
 export default defineConfig({
     base: "/",
     title: 'OpenAuthing',
-    // mock: false,
+    mock: false,
     esbuildMinifyIIFE: true,
     routes: [
         {

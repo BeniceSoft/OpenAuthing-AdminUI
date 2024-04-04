@@ -4,37 +4,46 @@ import { Table, ColumnType, TableRef } from "@/components/Table"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { enabledStatusDescription } from "@/lib/utils"
-import DepartmentService from "@/services/department.service"
-import { MoreHorizontalIcon, Plus, User, Users } from "lucide-react"
-import React from "react"
+import { Plus, User, Users, MoreHorizontalIcon } from "lucide-react"
+import React, { useImperativeHandle, useRef } from "react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useEffect, useState } from "react"
-import toast from "react-hot-toast"
-import { history, useRequest } from "umi"
+import { history, useModel } from "umi"
 
 export interface DepartmentMemberTableProps {
     isNone?: boolean
-    departmentId?: string
+    departmentId: string
     departmentName?: string
     onAddMember?: () => void
-    tableRef?: React.MutableRefObject<any>
 }
 
 export type DepartmentMemberTableRef = {
-    refush: () => void
+    refresh: () => Promise<void>
 } & TableRef
 
 const DepartmentMemberTable = ({
     isNone = true,
     departmentId,
     departmentName,
-    tableRef,
     onAddMember
-}: DepartmentMemberTableProps) => {
+}: DepartmentMemberTableProps, ref?: React.ForwardedRef<DepartmentMemberTableRef>) => {
+
+    const tableRef = useRef<DepartmentMemberTableRef>(null)
+
+    useImperativeHandle(ref, () => ({
+        refresh: async () => {
+            const pagination: any = tableRef?.current?.currentPagination || { pageIndex: 1, pageSize: 20 }
+            await fetchMembers({ ...pagination, departmentId, onlyDirectUsers })
+        },
+        currentPagination: tableRef?.current?.currentPagination!,
+        resetPagination: tableRef?.current?.currentPagination!,
+    }), [])
+
     const [onlyDirectUsers, setOnlyDirectUsers] = useState(false)
+
+    const { loading, membersData, fetchMembers, setLeader, setMain } = useModel("admin.departments.members")
 
     // 部门切换时重新拉取部门用户列表
     useEffect(() => {
@@ -42,47 +51,20 @@ const DepartmentMemberTable = ({
 
         tableRef?.current?.resetPagination()
 
-        fetchDepartmentUsers({
+        fetchMembers({
             pageIndex: 1,
             pageSize: 20,
+            departmentId,
+            onlyDirectUsers
         })
 
     }, [onlyDirectUsers, departmentId])
 
-    const { loading, data, run: fetchDepartmentUsers, mutate } = useRequest(
-        (params: { pageIndex: number, pageSize: number }) => DepartmentService.getDepartmentMembers({ ...params, departmentId, onlyDirectUsers }),
-        { manual: true, initialData: { totalCount: 0, items: [] } }
-    )
-
-    const { loading: setLeaderLoading, run: setLeader, } = useRequest(
-        async (userId: string, isLeader: boolean) => DepartmentService.setLeader({ departmentId: departmentId!, userId, isLeader }),
-        {
-            manual: true, onSuccess: (result, params) => {
-                console.log(result)
-                if (result) {
-                    toast.success(`已${params[1] ? '设为' : '取消'}部门负责人`);
-                    mutate((x: { totalCount: number, items: DepartmentMember[] }) => {
-
-                        const items = x.items.map(item => {
-                            if (item.id === params[0]) {
-                                item.isLeader = params[1]
-                            }
-                            return item
-                        })
-
-                        return {
-                            ...x,
-                            items
-                        }
-                    })
-                }
-            },
-        }
-    )
-
     const handlePageChanged = async (pagination: { pageSize: number, pageIndex: number }) => {
-        fetchDepartmentUsers({
-            ...pagination
+        fetchMembers({
+            ...pagination,
+            departmentId,
+            onlyDirectUsers
         })
     }
 
@@ -163,82 +145,77 @@ const DepartmentMemberTable = ({
         dataIndex: 'id',
         key: 'id',
         width: 'w-20',
-        render: (value, record, index) => {
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost">
-                            <MoreHorizontalIcon className="w-4 h-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-32 p-2 text-gray-500">
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem className="flex gap-x-2">
-                                <span>{enabledStatusDescription(!record.enabled)}账号</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <span>办理离职</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <span>变更部门</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <span>设置主部门</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setLeader(value, !record.isLeader)}>
-                                <span>{record.isLeader ? '取消' : '设为'}负责人</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <span>设置岗位</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        }
+        render: (value, record, __) => (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost">
+                        <MoreHorizontalIcon className="w-4 h-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-32 p-2 text-gray-500">
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem className="flex gap-x-2">
+                            <span>{enabledStatusDescription(!record.enabled)}账号</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <span>办理离职</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <span>变更部门</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>{}}>
+                            <span>设置主部门</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setLeader(departmentId, value, !record.isLeader)}>
+                            <span>{record.isLeader ? '取消' : '设为'}负责人</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <span>设置岗位</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        )
     },]
 
     return (
         <Empty isEmpty={isNone}
             description="选择部门来管理成员">
             <div className="flex w-full h-full flex-col overflow-hidden">
-                {loading || setLeaderLoading ?
-                    <Skeleton className="h-10 mb-1 w-full" /> :
-                    <div className="flex items-center justify-between h-8 mb-2 text-sm">
-                        <div className="flex-1 flex gap-x-4">
-                            <span className="font-semibold">{departmentName}</span>
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <div className="flex items-center text-gray-400 gap-x-1 text-xs ">
-                                            <Users className="w-4 h-4" />
-                                            {data?.totalCount}
-                                        </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <div>{data?.totalCount} 成员</div>
-                                        <TooltipArrow />
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                            <label className="select-none flex items-center gap-x-1">
-                                <input type="checkbox" checked={onlyDirectUsers}
-                                    className=""
-                                    onChange={e => { setOnlyDirectUsers(e.target.checked) }} />
-                                仅展示部门的直属成员
-                            </label>
-                        </div>
-                        <Button variant="link"
-                            onClick={onAddMember}>
-                            <Plus className="w-4 h-4" />
-                            <span>添加成员</span>
-                        </Button>
+                <div className="flex items-center justify-between h-8 mb-2 text-sm">
+                    <div className="flex-1 flex gap-x-4">
+                        <span className="font-semibold">{departmentName}</span>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <div className="flex items-center text-gray-400 gap-x-1 text-xs ">
+                                        <Users className="w-4 h-4" />
+                                        {membersData?.totalCount}
+                                    </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <div>{membersData?.totalCount} 成员</div>
+                                    <TooltipArrow />
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <label className="select-none flex items-center gap-x-1">
+                            <input type="checkbox" checked={onlyDirectUsers}
+                                className=""
+                                onChange={e => { setOnlyDirectUsers(e.target.checked) }} />
+                            仅展示部门的直属成员
+                        </label>
                     </div>
-                }
+                    <Button variant="link"
+                        onClick={onAddMember}>
+                        <Plus className="w-4 h-4" />
+                        <span>添加成员</span>
+                    </Button>
+                </div>
                 <div className="flex-1 flex flex-col h-full relative overflow-hidden">
                     <Table<DepartmentMember> ref={tableRef}
-                        columns={columns} isLoading={loading || setLeaderLoading}
-                        {...data}
+                        columns={columns} isLoading={loading}
+                        {...membersData}
                         onPageChanged={handlePageChanged} />
                 </div>
             </div>

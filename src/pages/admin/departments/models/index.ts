@@ -22,8 +22,8 @@ export default () => {
     const fetchDepartments = async (parentId?: string) => {
         if (parentId) {
             const data = await DepartmentService.getAll(parentId)
-            let children = data.map((x: any) => ({ ...x, key: x.id, title: x.name }))
-            const tree = addChildrenToTree(departmentTree as TreeNode[], parentId, children)
+            let children = data?.map((x: any) => ({ ...x, key: x.id, title: x.name }))
+            const tree = addChildrenToTree(departmentTree as TreeNode[], parentId, children || [])
             setDepartmentTree(tree)
 
             return
@@ -32,8 +32,8 @@ export default () => {
         setLoading(true)
         try {
             const data = await DepartmentService.getAll(parentId)
-            const tree = data.map((x: any) => ({ ...x, key: x.id, title: x.name }))
-            setDepartmentTree(tree)
+            const tree = data?.map((x: any) => ({ ...x, key: x.id, title: x.name }))
+            setDepartmentTree(tree || [])
         } finally {
             setLoading(false)
         }

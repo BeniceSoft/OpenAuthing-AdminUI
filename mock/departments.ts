@@ -68,6 +68,15 @@ export default defineMock({
         }, mockjs.Random.integer(300, 3000));
     },
 
+    'POST /api/departments/:departmentId/members': (req, res) => {
+        setTimeout(() => {
+            res.status(200).json(mockjs.mock({
+                code: 200,
+                data: mockjs.Random.integer(0, 99)
+            }))
+        }, mockjs.Random.integer(300, 3000));
+    },
+
     'PUT /api/departments/:departmentId/members/:userId/leader': (req, res) => {
         setTimeout(() => {
             res.status(200).json({

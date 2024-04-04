@@ -1,7 +1,9 @@
+import DepartmentSelect from "@/components/DepartmentSelect";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input, InputLabel } from "@/components/ui/input";
-import { Fragment, forwardRef, useImperativeHandle, useState } from "react"
+import classNames from "classnames";
+import { forwardRef, useImperativeHandle, useState } from "react"
 import { useForm } from "react-hook-form"
 
 interface DepartmentDialogRefProps {
@@ -23,8 +25,9 @@ const DepartmentDialog = forwardRef<DepartmentDialogRef, DepartmentDialogRefProp
     isProcessing,
     onConfirm
 }, ref) => {
-    const [isOpen, setOpen] = useState(false)
+    const [isOpen, setOpen] = useState<boolean>(false)
     const [actionType, setActionType] = useState<'create' | 'update'>('create')
+
     const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
     useImperativeHandle(ref, () => ({
@@ -58,7 +61,10 @@ const DepartmentDialog = forwardRef<DepartmentDialogRef, DepartmentDialogRefProp
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <input type="hidden" {...register('id')} />
                     <div>
-                        <div className="flex flex-col gap-y-8 w-full">
+                        <div className="flex flex-col gap-y-6 w-80">
+                            <InputLabel text="上级部门">
+                                <DepartmentSelect />
+                            </InputLabel>
                             <InputLabel text="部门名称" required>
                                 <Input type="text"
                                     placeholder="请输入部门名称"
@@ -66,12 +72,12 @@ const DepartmentDialog = forwardRef<DepartmentDialogRef, DepartmentDialogRefProp
                                     aria-invalid={errors.name ? 'true' : 'false'}
                                     {...register('name', { required: true })} />
                             </InputLabel>
-                            <InputLabel text="部门标识" required>
+                            <InputLabel text="部门标识">
                                 <Input type="text"
                                     placeholder="请输入部门标识"
                                     disabled={isProcessing}
                                     aria-invalid={errors.code ? 'true' : 'false'}
-                                    {...register('code', { required: true })} />
+                                    {...register('code', { required: false })} />
                             </InputLabel>
                             <InputLabel text="部门描述">
                                 <textarea

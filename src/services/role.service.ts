@@ -1,7 +1,7 @@
 import { RoleSubjectType } from "@/@types/role";
 import { request } from "@/lib/request"
 
-const ROOT_URL = "/api/roles"
+const ROOT_URL = "/api/admin/roles"
 
 const RoleService = {
     getAll: async (params: { pageIndex: number, pageSize: number }) => {

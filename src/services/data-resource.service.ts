@@ -1,6 +1,6 @@
 import { request } from "@/lib/request"
 
-const ROOT_URL = '/api/dataresources'
+const ROOT_URL = '/api/admin/dataresources'
 
 const DataResourceService = {
     query: async (params: { searchKey?: string, pageIndex?: number, pageSize?: number }) => {

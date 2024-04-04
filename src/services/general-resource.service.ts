@@ -1,6 +1,6 @@
 import { request } from "@/lib/request"
 
-const ROOT_URL = "/api/generalresources"
+const ROOT_URL = "/api/admin/generalresources"
 
 const GeneralResourceService = {
     create: (input: any) => {

@@ -1,7 +1,7 @@
 import { request } from '@/lib/request'
 import { CurrentUserInfo, LoginWith2FaModel, LoginWithPasswordModel, LoginWithRecoveryCode } from "@/@types/auth";
 
-const UserStoreName = '.AM.User'
+const UserStoreName = '__OA_USERINFO'
 
 class AuthService {
 
@@ -10,7 +10,7 @@ class AuthService {
     }
 
     public async getExternalIdPs() {
-        const { data } = await request('/api/getexternalloginproviders')
+        const { data } = await request('/api/admin/getexternalloginproviders')
         return data ?? []
     }
 
@@ -23,7 +23,7 @@ class AuthService {
     }
 
     public async login(model: LoginWithPasswordModel) {
-        const { data } = await request('/api/account/login', {
+        const { data } = await request('/api/admin/account/login', {
             method: 'POST',
             data: model
         })

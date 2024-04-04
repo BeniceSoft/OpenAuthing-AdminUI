@@ -1,6 +1,6 @@
 import { request } from "@/lib/request";
 
-const ROOT_URL = "/api/idps"
+const ROOT_URL = "/api/admin/idps"
 
 const IdentityProviderService = {
     getAll: async () => {

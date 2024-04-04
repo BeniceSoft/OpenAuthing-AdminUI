@@ -1,7 +1,7 @@
 import { DepartmentModel } from "@/@types/department"
 import { request } from "@/lib/request"
 
-const ROOT_URL = "/api/departments"
+const ROOT_URL = "/api/admin/departments"
 
 const DepartmentService = {
     getAll: async (parentId?: string) => {
@@ -56,10 +56,20 @@ const DepartmentService = {
     setLeader: async ({
         departmentId, userId, isLeader
     }: { departmentId: string, userId: string, isLeader: boolean }) => {
-        return await request(`/api/departments/${departmentId}/members/${userId}/leader`, {
+        return await request(`${ROOT_URL}/${departmentId}/members/${userId}/leader`, {
             method: 'PUT',
             params: {
                 isLeader
+            }
+        })
+    },
+    setMain: async ({
+        departmentId, userId, isMain
+    }: { departmentId: string, userId: string, isMain: boolean }) => {
+        return await request(`${ROOT_URL}/${departmentId}/members/${userId}/main`, {
+            method: 'PUT',
+            params: {
+                isMain
             }
         })
     }

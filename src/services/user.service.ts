@@ -1,6 +1,6 @@
 import { request } from "@/lib/request"
 
-const ROOT_URL = "/api/users"
+const ROOT_URL = "/api/admin/users"
 
 const UserService = {
 
